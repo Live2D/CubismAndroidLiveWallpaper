@@ -1,0 +1,6 @@
+.vs/
+.vscode/
+.idea/
+build/
+*.iml
+.DS_Store

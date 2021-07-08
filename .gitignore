@@ -1,0 +1,13 @@
+# build directories
+/AndroidWallPaper/build/
+# third party files
+thirdParty/*
+!thirdParty/scripts/*
+!thirdParty/stb/*
+# Other files
+/build/
+.vs/
+.vscode/
+.idea/
+*.iml
+.DS_Store
