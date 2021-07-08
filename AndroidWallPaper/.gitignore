@@ -1,4 +1,4 @@
 .gradle/
 .cxx/
 build/
-/local.properties
+local.properties
