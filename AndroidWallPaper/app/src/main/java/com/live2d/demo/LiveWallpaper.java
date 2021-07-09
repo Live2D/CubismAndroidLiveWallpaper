@@ -29,6 +29,9 @@ public class LiveWallpaper extends GLWallpaperService {
         public MyEngine() {
             super();
 
+            JniBridgeJava.SetContext(getApplicationContext());
+            JniBridgeJava.nativeOnStart();
+
             // handle prefs, other initialization
             renderer = new Live2DGLRenderer(getApplicationContext());
             setRenderer(renderer);

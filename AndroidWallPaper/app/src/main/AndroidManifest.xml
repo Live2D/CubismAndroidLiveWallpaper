@@ -16,8 +16,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:hardwareAccelerated="false">
+        android:theme="@style/AppTheme">
         <service
             android:name="com.live2d.demo.LiveWallpaper"
             android:label="@string/title_activity_sample"

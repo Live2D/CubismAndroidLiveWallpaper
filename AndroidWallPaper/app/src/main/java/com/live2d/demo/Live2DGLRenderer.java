@@ -19,8 +19,6 @@ public class Live2DGLRenderer implements GLWallpaperService.Renderer {
     public Live2DGLRenderer(Context context)
     {
         con = context;
-        JniBridgeJava.SetContext(con);
-        JniBridgeJava.nativeOnStart();
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {

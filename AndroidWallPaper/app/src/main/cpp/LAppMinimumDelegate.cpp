@@ -115,6 +115,13 @@ void LAppMinimumDelegate::OnSurfaceCreate()
     //Initialize cubism
     CubismFramework::Initialize();
 
+    if (!_view)
+    {
+        _view = new LAppMinimumView();
+    }
+
+    CubismLogInfo("%s",(_view != nullptr));
+
     _view->InitializeShader();
 }
 
