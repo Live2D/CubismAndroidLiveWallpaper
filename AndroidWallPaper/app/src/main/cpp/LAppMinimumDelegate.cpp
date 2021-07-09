@@ -15,6 +15,7 @@
 #include "LAppTextureManager.hpp"
 #include "JniBridgeC.hpp"
 
+
 using namespace Csm;
 using namespace std;
 using namespace LAppDefine;
@@ -46,8 +47,6 @@ void LAppMinimumDelegate::ReleaseInstance()
 
 void LAppMinimumDelegate::OnStart()
 {
-    _textureManager = new LAppTextureManager();
-    _view = new LAppMinimumView();
     LAppPal::UpdateTime();
 }
 
@@ -95,15 +94,16 @@ void LAppMinimumDelegate::Run()
     {
         _view->Render();
     }
-
-    if(!_isActive)
-    {
-        JniBridgeC::MoveTaskToBack();
-    }
 }
 
 void LAppMinimumDelegate::OnSurfaceCreate()
 {
+    // setup view
+    int width,height;
+    glViewport(0, 0, width, height);
+    _width = width;
+    _height = height;
+
     //テクスチャサンプリング設定
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -137,14 +137,11 @@ LAppMinimumDelegate::LAppMinimumDelegate():
     _mouseX(0.0f),
     _mouseY(0.0f),
     _isActive(true),
-    _textureManager(nullptr),
-    _view(nullptr)
+    _width(0),
+    _height(0)
 {
-    // setup view
-    int width,height;
-    glViewport(0, 0, width, height);
-    _width = width;
-    _height = height;
+    _textureManager = new LAppTextureManager();
+    _view = new LAppMinimumView();
 
     // Setup Cubism
     _cubismOption.LogFunction = LAppPal::PrintMessage;

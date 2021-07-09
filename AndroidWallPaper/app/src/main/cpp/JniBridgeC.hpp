@@ -17,9 +17,4 @@ public:
     * @brief Javaからファイル読み込み
     */
     static char* LoadFileAsBytesFromJava(const char* filePath, unsigned int* outSize);
-
-    /**
-    * @brief アプリをバックグラウンドに移動
-    */
-    static void MoveTaskToBack();
 };

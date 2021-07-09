@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright(c) Live2D Inc. All rights reserved.
  *
  * Use of this source code is governed by the Live2D Open Software license
@@ -16,7 +16,6 @@ import java.io.InputStream;
 public class JniBridgeJava {
 
     private static final String LIBRARY_NAME = "Demo";
-    private static Activity _activityInstance;
     private static Context _context;
 
     static {
@@ -26,10 +25,6 @@ public class JniBridgeJava {
     // Native -----------------------------------------------------------------
 
     public static native void nativeOnStart();
-
-    public static native void nativeOnPause();
-
-    public static native void nativeOnStop();
 
     public static native void nativeOnDestroy();
 
@@ -49,10 +44,6 @@ public class JniBridgeJava {
 
     public static void SetContext(Context context) {
         _context = context;
-    }
-
-    public static void SetActivityInstance(Activity activity) {
-        _activityInstance = activity;
     }
 
     public static byte[] LoadFile(String filePath) {
@@ -76,9 +67,4 @@ public class JniBridgeJava {
             }
         }
     }
-
-    public static void MoveTaskToBack() {
-        _activityInstance.moveTaskToBack(true);
-    }
-
 }
