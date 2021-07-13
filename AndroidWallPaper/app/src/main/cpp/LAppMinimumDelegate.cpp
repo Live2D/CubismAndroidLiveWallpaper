@@ -5,6 +5,7 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
+#include <EGL/egl.h>
 #include "LAppMinimumDelegate.hpp"
 #include <iostream>
 #include <GLES2/gl2.h>
@@ -15,6 +16,7 @@
 #include "LAppTextureManager.hpp"
 #include "JniBridgeC.hpp"
 
+#include "Utils/CubismDebug.hpp"
 
 using namespace Csm;
 using namespace std;
@@ -98,6 +100,9 @@ void LAppMinimumDelegate::Run()
 
 void LAppMinimumDelegate::OnSurfaceCreate()
 {
+    _view = new LAppMinimumView();
+    _textureManager = new LAppTextureManager();
+
     // setup view
     int width,height;
     glViewport(0, 0, width, height);
@@ -114,13 +119,6 @@ void LAppMinimumDelegate::OnSurfaceCreate()
 
     //Initialize cubism
     CubismFramework::Initialize();
-
-    if (!_view)
-    {
-        _view = new LAppMinimumView();
-    }
-
-    CubismLogInfo("%s",(_view != nullptr));
 
     _view->InitializeShader();
 }
@@ -147,9 +145,6 @@ LAppMinimumDelegate::LAppMinimumDelegate():
     _width(0),
     _height(0)
 {
-    _textureManager = new LAppTextureManager();
-    _view = new LAppMinimumView();
-
     // Setup Cubism
     _cubismOption.LogFunction = LAppPal::PrintMessage;
     _cubismOption.LoggingLevel = LAppDefine::CubismLoggingLevel;
@@ -199,7 +194,10 @@ void LAppMinimumDelegate::OnTouchMoved(double x, double y)
 GLuint LAppMinimumDelegate::CreateShader()
 {
     //バーテックスシェーダのコンパイル
-    GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+    auto glCreateShaders = (PFNGLCREATESHADERPROC)eglGetProcAddress("glCreateShader");
+    CubismLogInfo("ここ");
+    GLuint vertexShaderId = glCreateShaders(GL_VERTEX_SHADER);
+    CubismLogInfo("だよ");
     const char* vertexShader =
         "#version 100\n"
         "attribute vec3 position;"

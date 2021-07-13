@@ -10,8 +10,6 @@ package com.live2d.demo;
 import android.view.MotionEvent;
 import net.rbgrn.android.glwallpaperservice.*;
 
-import java.io.PrintStream;
-
 public class LiveWallpaper extends GLWallpaperService {
 
     public LiveWallpaper() {
@@ -19,14 +17,14 @@ public class LiveWallpaper extends GLWallpaperService {
     }
 
     public Engine onCreateEngine() {
-        MyEngine engine = new MyEngine();
+        Live2DWallpaperEngine engine = new Live2DWallpaperEngine();
         return engine;
     }
 
-    class MyEngine extends GLEngine {
+    class Live2DWallpaperEngine extends GLEngine {
         Live2DGLRenderer renderer;
 
-        public MyEngine() {
+        public Live2DWallpaperEngine() {
             super();
 
             JniBridgeJava.SetContext(getApplicationContext());
