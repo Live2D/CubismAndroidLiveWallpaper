@@ -8,12 +8,16 @@
 package com.live2d.demo;
 
 import android.content.Context;
+import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import net.rbgrn.android.glwallpaperservice.*;
 
-public class Live2DGLRenderer implements GLWallpaperService.Renderer {
+import static android.opengl.GLES20.*;
+
+public class Live2DGLRenderer implements GLSurfaceView.Renderer {
     Context con;
 
     public Live2DGLRenderer(Context context)
@@ -22,7 +26,46 @@ public class Live2DGLRenderer implements GLWallpaperService.Renderer {
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        JniBridgeJava.nativeOnSurfaceCreated();
+        System.out.println("ここ");
+        //バーテックスシェーダのコンパイル
+        int vertexShaderId = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
+        System.out.println("通過");
+    String vertexShader =
+            "#version 100\n"+
+                    "attribute vec3 position;"+
+                    "attribute vec2 uv;"+
+                    "varying vec2 vuv;"+
+                    "void main(void){"+
+                    "    gl_Position = vec4(position, 1.0);"+
+                    "vuv = uv;"+
+                    "}";
+        GLES20.glShaderSource(vertexShaderId,vertexShader);
+        GLES20.glCompileShader(vertexShaderId);
+
+        //フラグメントシェーダのコンパイル
+        int fragmentShaderId = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
+        String fragmentShader =
+                "#version 100\n"+
+        "precision mediump float;"+
+        "varying vec2 vuv;"+
+        "uniform sampler2D texture;"+
+        "uniform vec4 baseColor;"+
+        "void main(void){"+
+        "    gl_FragColor = texture2D(texture, vuv) * baseColor;"+
+        "}";
+        GLES20.glShaderSource(fragmentShaderId,fragmentShader);
+        GLES20.glCompileShader(fragmentShaderId);
+
+        //プログラムオブジェクトの作成
+        int programId = GLES20.glCreateProgram();
+        GLES20.glAttachShader(programId, vertexShaderId);
+        GLES20.glAttachShader(programId, fragmentShaderId);
+
+        // リンク
+        GLES20.glLinkProgram(programId);
+
+        GLES20.glUseProgram(programId);
+        JniBridgeJava.nativeOnSurfaceCreated(programId);
     }
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -30,14 +73,6 @@ public class Live2DGLRenderer implements GLWallpaperService.Renderer {
     }
 
     public void onDrawFrame(GL10 gl) {
-        gl.glMatrixMode(GL10.GL_MODELVIEW ) ;
-        gl.glLoadIdentity() ;
-        gl.glClear( GL10.GL_COLOR_BUFFER_BIT ) ;
-        gl.glEnable( GL10.GL_BLEND ) ;
-        gl.glBlendFunc( GL10.GL_ONE , GL10.GL_ONE_MINUS_SRC_ALPHA ) ;
-        gl.glDisable( GL10.GL_DEPTH_TEST ) ;
-        gl.glDisable( GL10.GL_CULL_FACE ) ;
-
         JniBridgeJava.nativeOnDrawFrame();
     }
 

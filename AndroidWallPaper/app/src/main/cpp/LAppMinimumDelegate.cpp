@@ -5,10 +5,10 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
-#include <EGL/egl.h>
 #include "LAppMinimumDelegate.hpp"
 #include <iostream>
 #include <GLES2/gl2.h>
+#include <EGL/egl.h>
 #include "LAppMinimumView.hpp"
 #include "LAppPal.hpp"
 #include "LAppDefine.hpp"
@@ -98,7 +98,7 @@ void LAppMinimumDelegate::Run()
     }
 }
 
-void LAppMinimumDelegate::OnSurfaceCreate()
+void LAppMinimumDelegate::OnSurfaceCreate(unsigned int programId)
 {
     _view = new LAppMinimumView();
     _textureManager = new LAppTextureManager();
@@ -120,7 +120,8 @@ void LAppMinimumDelegate::OnSurfaceCreate()
     //Initialize cubism
     CubismFramework::Initialize();
 
-    _view->InitializeShader();
+    _view->InitializeShader(programId);
+    CubismLogInfo("無事通過");
 }
 
 void LAppMinimumDelegate::OnSurfaceChanged(float width, float height)
@@ -197,7 +198,6 @@ GLuint LAppMinimumDelegate::CreateShader()
     auto glCreateShaders = (PFNGLCREATESHADERPROC)eglGetProcAddress("glCreateShader");
     CubismLogInfo("ここ");
     GLuint vertexShaderId = glCreateShaders(GL_VERTEX_SHADER);
-    CubismLogInfo("だよ");
     const char* vertexShader =
         "#version 100\n"
         "attribute vec3 position;"

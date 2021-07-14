@@ -44,7 +44,6 @@ target_link_libraries(${APP_NAME}
   EGL
   log
 )
-
 # Specify include directories.
 target_include_directories(${APP_NAME} PRIVATE ${STB_PATH})
 

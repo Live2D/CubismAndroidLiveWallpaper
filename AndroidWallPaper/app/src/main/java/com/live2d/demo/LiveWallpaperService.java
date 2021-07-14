@@ -7,12 +7,17 @@
 
 package com.live2d.demo;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.pm.ConfigurationInfo;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+
 import net.rbgrn.android.glwallpaperservice.*;
 
-public class LiveWallpaper extends GLWallpaperService {
+public class LiveWallpaperService extends GLWallpaperService {
 
-    public LiveWallpaper() {
+    public LiveWallpaperService() {
         super();
     }
 
@@ -29,11 +34,34 @@ public class LiveWallpaper extends GLWallpaperService {
 
             JniBridgeJava.SetContext(getApplicationContext());
             JniBridgeJava.nativeOnStart();
+        }
 
-            // handle prefs, other initialization
-            renderer = new Live2DGLRenderer(getApplicationContext());
-            setRenderer(renderer);
-            setRenderMode(RENDERMODE_CONTINUOUSLY);
+        @Override
+        public void onCreate(SurfaceHolder surfaceHolder) {
+            super.onCreate(surfaceHolder);
+
+            // Check if the system supports OpenGL ES 2.0.
+            final ActivityManager activityManager =
+                    (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            final ConfigurationInfo configurationInfo =
+                    activityManager.getDeviceConfigurationInfo();
+            final boolean supportsEs2 =
+                    configurationInfo.reqGlEsVersion >= 0x20000;
+
+            if (supportsEs2)
+            {
+                // Request an OpenGL ES 2.0 compatible context.
+                setEGLContextClientVersion(2);
+
+                // On Honeycomb+ devices, this improves the performance when
+                // leaving and resuming the live wallpaper.
+                setPreserveEGLContextOnPause(true);
+
+                // handle prefs, other initialization
+                // Set the renderer to our user-defined renderer.
+                renderer = new Live2DGLRenderer(getApplicationContext());
+                setRenderer(renderer);
+            }
         }
 
         @Override
@@ -57,20 +85,10 @@ public class LiveWallpaper extends GLWallpaperService {
             super.onDestroy();
             JniBridgeJava.nativeOnDestroy();
 
-            /* そのまま呼び出すと
-            * call to OpenGL ES API with no current context (logged once per thread)
-            * が発生する。
-            * 公式リファレンス↓
-            * https://developer.android.com/reference/android/opengl/GLSurfaceView.html#handling-events
-            */
-             queueEvent(new Runnable() {
-                public void run() {
-                    if (renderer != null) {
-                        renderer.release();
-                    }
-                    renderer = null;
-                }
-            });
+            if (renderer != null) {
+                renderer.release();
+            }
+            renderer = null;
         }
     }
 }

@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name="com.live2d.demo.LiveWallpaper"
+            android:name="com.live2d.demo.LiveWallpaperService"
             android:label="@string/title_activity_sample"
             android:permission="android.permission.BIND_WALLPAPER" >
             <intent-filter>

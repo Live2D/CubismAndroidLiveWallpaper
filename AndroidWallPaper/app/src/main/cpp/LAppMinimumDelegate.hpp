@@ -58,7 +58,7 @@ public:
     /**
     * @brief   JavaのGLSurfaceviewのOnSurfaceCreate()のコールバック関数。
     */
-    void OnSurfaceCreate();
+    void OnSurfaceCreate(unsigned int programId);
 
     /**
      * @brief JavaのGLSurfaceviewのOnSurfaceChanged()のコールバック関数。
@@ -115,11 +115,6 @@ public:
     * @brief ウインドウ高さの取得
     */
     int GetWindowHeight() { return _height; }
-
-    /**
-    * @brief   アプリケーションを非アクティブにする。
-    */
-    void DeActivateApp() { _isActive = false; }
 
     /**
     * @brief   View情報を取得する。

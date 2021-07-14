@@ -97,9 +97,9 @@ void LAppMinimumView::Initialize()
     );
 }
 
-void LAppMinimumView::InitializeShader()
+void LAppMinimumView::InitializeShader(unsigned int programId)
 {
-    _programId = LAppMinimumDelegate::GetInstance()->CreateShader();
+    _programId = programId;
 }
 
 void LAppMinimumView::InitializeSprite()
