@@ -88,9 +88,9 @@ extern "C"
     }
 
     JNIEXPORT void JNICALL
-    Java_com_live2d_demo_JniBridgeJava_nativeOnSurfaceCreated(JNIEnv *env, jclass type,jint programId)
+    Java_com_live2d_demo_JniBridgeJava_nativeOnSurfaceCreated(JNIEnv *env, jclass type)
     {
-        LAppMinimumDelegate::GetInstance()->OnSurfaceCreate(programId);
+        LAppMinimumDelegate::GetInstance()->OnSurfaceCreate();
     }
 
     JNIEXPORT void JNICALL

@@ -58,7 +58,7 @@ public:
     /**
     * @brief シェーダーの初期化を行う。
     */
-    void InitializeShader(unsigned int programId);
+    void InitializeShader();
 
     /**
     * @brief 画像の初期化を行う。

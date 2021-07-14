@@ -98,7 +98,7 @@ void LAppMinimumDelegate::Run()
     }
 }
 
-void LAppMinimumDelegate::OnSurfaceCreate(unsigned int programId)
+void LAppMinimumDelegate::OnSurfaceCreate()
 {
     _view = new LAppMinimumView();
     _textureManager = new LAppTextureManager();
@@ -120,8 +120,7 @@ void LAppMinimumDelegate::OnSurfaceCreate(unsigned int programId)
     //Initialize cubism
     CubismFramework::Initialize();
 
-    _view->InitializeShader(programId);
-    CubismLogInfo("無事通過");
+    _view->InitializeShader();
 }
 
 void LAppMinimumDelegate::OnSurfaceChanged(float width, float height)
@@ -195,9 +194,7 @@ void LAppMinimumDelegate::OnTouchMoved(double x, double y)
 GLuint LAppMinimumDelegate::CreateShader()
 {
     //バーテックスシェーダのコンパイル
-    auto glCreateShaders = (PFNGLCREATESHADERPROC)eglGetProcAddress("glCreateShader");
-    CubismLogInfo("ここ");
-    GLuint vertexShaderId = glCreateShaders(GL_VERTEX_SHADER);
+    GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     const char* vertexShader =
         "#version 100\n"
         "attribute vec3 position;"

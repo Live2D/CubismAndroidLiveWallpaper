@@ -26,46 +26,7 @@ public class Live2DGLRenderer implements GLSurfaceView.Renderer {
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        System.out.println("ここ");
-        //バーテックスシェーダのコンパイル
-        int vertexShaderId = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
-        System.out.println("通過");
-    String vertexShader =
-            "#version 100\n"+
-                    "attribute vec3 position;"+
-                    "attribute vec2 uv;"+
-                    "varying vec2 vuv;"+
-                    "void main(void){"+
-                    "    gl_Position = vec4(position, 1.0);"+
-                    "vuv = uv;"+
-                    "}";
-        GLES20.glShaderSource(vertexShaderId,vertexShader);
-        GLES20.glCompileShader(vertexShaderId);
-
-        //フラグメントシェーダのコンパイル
-        int fragmentShaderId = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
-        String fragmentShader =
-                "#version 100\n"+
-        "precision mediump float;"+
-        "varying vec2 vuv;"+
-        "uniform sampler2D texture;"+
-        "uniform vec4 baseColor;"+
-        "void main(void){"+
-        "    gl_FragColor = texture2D(texture, vuv) * baseColor;"+
-        "}";
-        GLES20.glShaderSource(fragmentShaderId,fragmentShader);
-        GLES20.glCompileShader(fragmentShaderId);
-
-        //プログラムオブジェクトの作成
-        int programId = GLES20.glCreateProgram();
-        GLES20.glAttachShader(programId, vertexShaderId);
-        GLES20.glAttachShader(programId, fragmentShaderId);
-
-        // リンク
-        GLES20.glLinkProgram(programId);
-
-        GLES20.glUseProgram(programId);
-        JniBridgeJava.nativeOnSurfaceCreated(programId);
+        JniBridgeJava.nativeOnSurfaceCreated();
     }
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {

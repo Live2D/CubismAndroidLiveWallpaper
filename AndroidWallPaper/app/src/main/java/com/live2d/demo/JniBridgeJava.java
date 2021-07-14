@@ -28,7 +28,7 @@ public class JniBridgeJava {
 
     public static native void nativeOnDestroy();
 
-    public static native void nativeOnSurfaceCreated(int programId);
+    public static native void nativeOnSurfaceCreated();
 
     public static native void nativeOnSurfaceChanged(int width, int height);
 

@@ -58,7 +58,7 @@ public:
     /**
     * @brief   JavaのGLSurfaceviewのOnSurfaceCreate()のコールバック関数。
     */
-    void OnSurfaceCreate(unsigned int programId);
+    void OnSurfaceCreate();
 
     /**
      * @brief JavaのGLSurfaceviewのOnSurfaceChanged()のコールバック関数。
