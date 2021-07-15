@@ -17,6 +17,7 @@
 #include "JniBridgeC.hpp"
 
 #include "Utils/CubismDebug.hpp"
+#include "LAppMinimumModel.hpp"
 
 using namespace Csm;
 using namespace std;
@@ -232,4 +233,12 @@ GLuint LAppMinimumDelegate::CreateShader()
     glUseProgram(programId);
 
     return programId;
+}
+
+void LAppMinimumDelegate::StartRandomMotion() {
+    LAppMinimumLive2DManager::GetInstance()->GetModel()->StartRandomMotion();
+}
+
+void LAppMinimumDelegate::StartMotion(Csm::csmInt32 index) {
+    LAppMinimumLive2DManager::GetInstance()->GetModel()->StartOrderMotion(index);
 }

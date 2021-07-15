@@ -8,6 +8,7 @@
 #include "LAppMinimumModel.hpp"
 #include <fstream>
 #include <vector>
+#include <Live2DCubismCore.hpp>
 #include <CubismModelSettingJson.hpp>
 #include <Motion/CubismMotion.hpp>
 #include <Physics/CubismPhysics.hpp>
@@ -152,6 +153,21 @@ void LAppMinimumModel::SetupModel()
         LoadUserData(buffer, bufferSize);
     });
 
+    // Breathの作成
+    {
+        _breath = CubismBreath::Create();
+
+        csmVector<CubismBreath::BreathParameterData> breathParameters;
+
+        breathParameters.PushBack(CubismBreath::BreathParameterData(_idParamAngleX, 0.0f, 15.0f, 6.5345f, 0.5f));
+        breathParameters.PushBack(CubismBreath::BreathParameterData(_idParamAngleY, 0.0f, 8.0f, 3.5345f, 0.5f));
+        breathParameters.PushBack(CubismBreath::BreathParameterData(_idParamAngleZ, 0.0f, 10.0f, 5.5345f, 0.5f));
+        breathParameters.PushBack(CubismBreath::BreathParameterData(_idParamBodyAngleX, 0.0f, 4.0f, 15.5345f, 0.5f));
+        breathParameters.PushBack(CubismBreath::BreathParameterData(CubismFramework::GetIdManager()->GetId(ParamBreath), 0.5f, 0.5f, 3.2345f, 0.5f));
+
+        _breath->SetParameters(breathParameters);
+    }
+
     // Layout
     csmMap<csmString, csmFloat32> layout;
     _modelJson->GetLayoutMap(layout);
@@ -160,6 +176,12 @@ void LAppMinimumModel::SetupModel()
 
     // パラメータを保存
     _model->SaveParameters();
+
+    // モデル読み込み時のパラメータを保存
+    _initParameterValues = new csmFloat32[_model->GetParameterCount()];
+    for (int i = 0; i < _model->GetParameterCount(); ++i) {
+        _initParameterValues[i] = _model->GetParameterValue(i);
+    }
 
     // モーションデータの読み込み
     for (csmInt32 i = 0; i < _modelJson->GetMotionGroupCount(); i++)
@@ -286,26 +308,32 @@ void LAppMinimumModel::Update()
 
     //-----------------------------------------------------------------
     _model->LoadParameters(); // 前回セーブされた状態をロード
-    if (_motionManager->IsFinished())
-    {
-        // モーションの再生がない場合、始めに登録されているモーションを再生する
-        StartMotion(LAppDefine::MotionGroupIdle, 0, LAppDefine::PriorityIdle);
-    }
-    else
+    if (!_motionManager->IsFinished())
     {
         motionUpdated = _motionManager->UpdateMotion(_model, deltaTimeSeconds); // モーションを更新
     }
     _model->SaveParameters(); // 状態を保存
     //-----------------------------------------------------------------
 
-    // まばたき
+    // メインモーションの更新がないとき
     if (!motionUpdated)
     {
         if (_eyeBlink)
         {
-            // メインモーションの更新がないとき
-            _eyeBlink->UpdateParameters(_model, deltaTimeSeconds); // 目パチ
+            _eyeBlink->UpdateParameters(_model, deltaTimeSeconds); // まばたき
         }
+
+        // モデル読み込み時のパラメータとの差分を出す
+        for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i) {
+            csmFloat32 diff = _initParameterValues[i] - _model->GetParameterValue(i);
+            if (diff > 0.001f)
+            {
+                _model->AddParameterValue(i,diff * deltaTimeSeconds * 10.0f);
+            } else{
+                _model->SetParameterValue(i,_initParameterValues[i]);
+            }
+        }
+        _model->SaveParameters(); // 状態を保存
     }
 
     if (_expressionManager)
@@ -346,6 +374,18 @@ void LAppMinimumModel::Update()
 
     _model->Update();
 
+}
+
+CubismMotionQueueEntryHandle LAppMinimumModel::StartRandomMotion(const csmChar* group, csmInt32 priority, ACubismMotion::FinishedMotionCallback onFinishedMotionHandler)
+{
+    if (_modelJson->GetMotionCount(group) == 0)
+    {
+        return InvalidMotionQueueEntryHandleValue;
+    }
+
+    csmInt32 no = rand() % _modelJson->GetMotionCount(group);
+
+    return StartMotion(group, no, priority, onFinishedMotionHandler);
 }
 
 CubismMotionQueueEntryHandle LAppMinimumModel::StartMotion(const csmChar* group, csmInt32 no, csmInt32 priority, ACubismMotion::FinishedMotionCallback onFinishedMotionHandler)
@@ -490,4 +530,28 @@ void LAppMinimumModel::MotionEventFired(const csmString& eventValue)
 Csm::Rendering::CubismOffscreenFrame_OpenGLES2 &LAppMinimumModel::GetRenderBuffer()
 {
     return _renderBuffer;
+}
+
+void LAppMinimumModel::StartRandomMotion() {
+    //-----------------------------------------------------------------
+    _model->LoadParameters(); // 前回セーブされた状態をロード
+    if (_motionManager->IsFinished())
+    {
+        // モーションの再生がない場合、始めに登録されているモーションを再生する
+        StartRandomMotion(LAppDefine::MotionGroupIdle, LAppDefine::PriorityIdle);
+    }
+    _model->SaveParameters(); // 状態を保存
+    //-----------------------------------------------------------------
+}
+
+void LAppMinimumModel::StartOrderMotion(Csm::csmInt32 index) {
+    //-----------------------------------------------------------------
+    _model->LoadParameters(); // 前回セーブされた状態をロード
+    if (_motionManager->IsFinished())
+    {
+        // モーションの再生がない場合、始めに登録されているモーションを再生する
+        StartMotion(LAppDefine::MotionGroupIdle,index, LAppDefine::PriorityIdle);
+    }
+    _model->SaveParameters(); // 状態を保存
+    //-----------------------------------------------------------------
 }

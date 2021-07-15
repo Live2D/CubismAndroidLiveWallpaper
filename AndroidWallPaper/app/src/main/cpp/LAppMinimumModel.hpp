@@ -64,22 +64,23 @@ public:
     void Update();
 
     /**
+     * @brief   ランダムなモーションを再生する（Java呼び出し用）
+     *
+     */
+    void StartRandomMotion();
+
+    /**
+     * @brief   指定したモーションを再生する（Java呼び出し用）
+     *
+     */
+    void StartOrderMotion(Csm::csmInt32 index);
+
+    /**
      * @brief   モデルを描画する処理。モデルを描画する空間のView-Projection行列を渡す。
      *
      * @param[in]  matrix  View-Projection行列
      */
     void Draw(Csm::CubismMatrix44& matrix);
-
-    /**
-     * @brief   引数で指定したモーションの再生を開始する。
-     *
-     * @param[in]   group                       モーショングループ名
-     * @param[in]   no                          グループ内の番号
-     * @param[in]   priority                    優先度
-     * @param[in]   onFinishedMotionHandler     モーション再生終了時に呼び出されるコールバック関数。NULLの場合、呼び出されない。
-     * @return                                  開始したモーションの識別番号を返す。個別のモーションが終了したか否かを判定するIsFinished()の引数で使用する。開始できない時は「-1」
-     */
-    Csm::CubismMotionQueueEntryHandle StartMotion(const Csm::csmChar* group, Csm::csmInt32 no, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler = NULL);
 
     /**
      * @brief   引数で指定した表情モーションをセットする
@@ -142,6 +143,27 @@ private:
     */
     void ReleaseExpressions();
 
+    /**
+     * @brief   ランダムに選ばれたモーションの再生を開始する。
+     *
+     * @param[in]   group                       モーショングループ名
+     * @param[in]   priority                    優先度
+     * @param[in]   onFinishedMotionHandler     モーション再生終了時に呼び出されるコールバック関数。NULLの場合、呼び出されない。
+     * @return                                  開始したモーションの識別番号を返す。個別のモーションが終了したか否かを判定するIsFinished()の引数で使用する。開始できない時は「-1」
+     */
+    Csm::CubismMotionQueueEntryHandle StartRandomMotion(const Csm::csmChar* group, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler = NULL);
+
+    /**
+     * @brief   引数で指定したモーションの再生を開始する。
+     *
+     * @param[in]   group                       モーショングループ名
+     * @param[in]   no                          グループ内の番号
+     * @param[in]   priority                    優先度
+     * @param[in]   onFinishedMotionHandler     モーション再生終了時に呼び出されるコールバック関数。NULLの場合、呼び出されない。
+     * @return                                  開始したモーションの識別番号を返す。個別のモーションが終了したか否かを判定するIsFinished()の引数で使用する。開始できない時は「-1」
+     */
+    Csm::CubismMotionQueueEntryHandle StartMotion(const Csm::csmChar* group, Csm::csmInt32 no, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler = NULL);
+
     Csm::CubismModelSettingJson* _modelJson; ///< モデルセッティング情報
     std::string _modelDirName; ///< モデルセッティングが置かれたディレクトリの名称
     std::string _currentModelDirectory; ///< モデルセッティングが置かれたディレクトリ
@@ -157,6 +179,8 @@ private:
     const Csm::CubismId* _idParamEyeBallY; ///< パラメータID: ParamEyeBallXY
 
     Csm::Rendering::CubismOffscreenFrame_OpenGLES2  _renderBuffer;   ///< フレームバッファ以外の描画先
+
+    Csm::csmFloat32* _initParameterValues;                       ///< パラメータの初期値のリスト
 };
 
 

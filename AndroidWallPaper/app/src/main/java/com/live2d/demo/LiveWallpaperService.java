@@ -26,6 +26,11 @@ public class LiveWallpaperService extends GLWallpaperService {
         return engine;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
     class Live2DWallpaperEngine extends GLEngine {
         Live2DGLRenderer renderer;
 
@@ -71,6 +76,7 @@ public class LiveWallpaperService extends GLWallpaperService {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     JniBridgeJava.nativeOnTouchesBegan(pointX, pointY);
+                    JniBridgeJava.nativeStartMotion(0);
                     break;
                 case MotionEvent.ACTION_UP:
                     JniBridgeJava.nativeOnTouchesEnded(pointX, pointY);

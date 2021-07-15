@@ -122,5 +122,17 @@ extern "C"
     {
         LAppMinimumDelegate::GetInstance()->OnTouchMoved(pointX, pointY);
     }
+
+    JNIEXPORT void JNICALL
+    Java_com_live2d_demo_JniBridgeJava_nativeRandomStartMotion(JNIEnv *env, jclass type)
+    {
+        LAppMinimumDelegate::GetInstance()->StartRandomMotion();
+    }
+
+    JNIEXPORT void JNICALL
+    Java_com_live2d_demo_JniBridgeJava_nativeStartMotion(JNIEnv *env, jclass type, jint index)
+    {
+        LAppMinimumDelegate::GetInstance()->StartMotion(index);
+    }
 }
 

@@ -97,6 +97,16 @@ public:
     void OnTouchMoved(double x, double y);
 
     /**
+    * @brief ランダムなモーションの開始
+    */
+    void StartRandomMotion();
+
+    /**
+    * @brief モーションの開始
+    */
+    void StartMotion(Csm::csmInt32 index);
+
+    /**
     * @brief シェーダーを登録する。
     */
     GLuint CreateShader();

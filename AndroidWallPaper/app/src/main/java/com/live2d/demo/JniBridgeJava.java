@@ -40,6 +40,10 @@ public class JniBridgeJava {
 
     public static native void nativeOnTouchesMoved(float pointX, float pointY);
 
+    public static native void nativeRandomStartMotion();
+
+    public static native void nativeStartMotion(int index);
+
     // Java -----------------------------------------------------------------
 
     public static void SetContext(Context context) {
