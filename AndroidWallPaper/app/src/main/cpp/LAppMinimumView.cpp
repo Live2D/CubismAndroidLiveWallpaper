@@ -177,6 +177,8 @@ Csm::CubismVector2 LAppMinimumView::OnTouchesEnded(float pointX, float pointY)
     float x = _deviceToScreen->TransformX(_touchManager->GetX()); // 論理座標変換した座標を取得。
     float y = _deviceToScreen->TransformY(_touchManager->GetY()); // 論理座標変換した座標を取得。
 
+    live2DManager->OnTap(x, y);
+
     return {x,y};
 }
 

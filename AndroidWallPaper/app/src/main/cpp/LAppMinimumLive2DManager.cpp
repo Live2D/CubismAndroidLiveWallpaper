@@ -70,6 +70,18 @@ void LAppMinimumLive2DManager::OnDrag(csmFloat32 x, csmFloat32 y) const
     model->SetDragging(x, y);
 }
 
+void LAppMinimumLive2DManager::OnTap(csmFloat32 x, csmFloat32 y)
+{
+    if (_model->HitTest(HitAreaNameHead, x, y))
+    {
+        _model->SetRandomExpression();
+    }
+    else if (_model->HitTest(HitAreaNameBody, x, y))
+    {
+        _model->StartRandomMotionWithOption(MotionGroupTapBody, PriorityNormal);
+    }
+}
+
 void LAppMinimumLive2DManager::OnUpdate() const
 {
     int width = LAppMinimumDelegate::GetInstance()->GetWindowWidth();

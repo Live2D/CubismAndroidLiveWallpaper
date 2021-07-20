@@ -251,7 +251,7 @@ void LAppMinimumDelegate::StartRandomMotion() {
 }
 
 void LAppMinimumDelegate::StartMotion(Csm::csmInt32 index) {
-    LAppMinimumLive2DManager::GetInstance()->GetModel()->StartOrderMotion(index);
+    LAppMinimumLive2DManager::GetInstance()->GetModel()->StartOrderMotion(MotionGroupIdle,index,PriorityIdle);
 }
 
 void LAppMinimumDelegate::ParameterResetCount() {

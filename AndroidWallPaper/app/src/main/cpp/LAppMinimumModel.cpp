@@ -362,8 +362,6 @@ void LAppMinimumModel::Update()
         //ドラッグによる目の向きの調整
         _model->AddParameterValue(_idParamEyeBallX, _dragX); // -1から1の値を加える
         _model->AddParameterValue(_idParamEyeBallY, _dragY);
-
-        CubismLogInfo("%.2f,%.2f",_dragX,_dragY);
     } else {
         Csm::CubismVector2 vec = LAppMinimumDelegate::GetInstance()->GetViewPoint();
         //CubismLogInfo("%.2f,%.2f",vec.X,vec.Y);
@@ -484,6 +482,25 @@ CubismMotionQueueEntryHandle LAppMinimumModel::StartMotion(const csmChar* group,
     return  _motionManager->StartMotionPriority(motion, autoDelete, priority);
 }
 
+csmBool LAppMinimumModel::HitTest(const csmChar* hitAreaName, csmFloat32 x, csmFloat32 y)
+{
+    // 透明時は当たり判定なし。
+    if (_opacity < 1)
+    {
+        return false;
+    }
+    const csmInt32 count = _modelJson->GetHitAreasCount();
+    for (csmInt32 i = 0; i < count; i++)
+    {
+        if (strcmp(_modelJson->GetHitAreaName(i), hitAreaName) == 0)
+        {
+            const CubismIdHandle drawID = _modelJson->GetHitAreaId(i);
+            return IsHit(drawID, x, y);
+        }
+    }
+    return false; // 存在しない場合はfalse
+}
+
 void LAppMinimumModel::Draw(CubismMatrix44& matrix)
 {
     if (!_model)
@@ -512,6 +529,28 @@ void LAppMinimumModel::SetExpression(const csmChar* expressionID)
     else
     {
         if (_debugMode) LAppPal::PrintLog("[APP]expression[%s] is null ", expressionID);
+    }
+}
+
+void LAppMinimumModel::SetRandomExpression()
+{
+    if (_expressions.GetSize() == 0)
+    {
+        return;
+    }
+
+    csmInt32 no = rand() % _expressions.GetSize();
+    csmMap<csmString, ACubismMotion*>::const_iterator map_ite;
+    csmInt32 i = 0;
+    for (map_ite = _expressions.Begin(); map_ite != _expressions.End(); map_ite++)
+    {
+        if (i == no)
+        {
+            csmString name = (*map_ite).First;
+            SetExpression(name.GetRawString());
+            return;
+        }
+        i++;
     }
 }
 
@@ -574,13 +613,25 @@ void LAppMinimumModel::StartRandomMotion() {
     //-----------------------------------------------------------------
 }
 
-void LAppMinimumModel::StartOrderMotion(Csm::csmInt32 index) {
+void LAppMinimumModel::StartRandomMotionWithOption(const Csm::csmChar* group, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler) {
     //-----------------------------------------------------------------
     _model->LoadParameters(); // 前回セーブされた状態をロード
     if (_motionManager->IsFinished())
     {
         // モーションの再生がない場合、始めに登録されているモーションを再生する
-        StartMotion(LAppDefine::MotionGroupIdle,index, LAppDefine::PriorityIdle);
+        StartRandomMotion(group, priority,onFinishedMotionHandler);
+    }
+    _model->SaveParameters(); // 状態を保存
+    //-----------------------------------------------------------------
+}
+
+void LAppMinimumModel::StartOrderMotion(const Csm::csmChar* group,Csm::csmInt32 index, Csm::csmInt32 priority) {
+    //-----------------------------------------------------------------
+    _model->LoadParameters(); // 前回セーブされた状態をロード
+    if (_motionManager->IsFinished())
+    {
+        // モーションの再生がない場合、始めに登録されているモーションを再生する
+        StartMotion(group,index, priority);
     }
     _model->SaveParameters(); // 状態を保存
     //-----------------------------------------------------------------
