@@ -76,7 +76,6 @@ public class LiveWallpaperService extends GLWallpaperService {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     JniBridgeJava.nativeOnTouchesBegan(pointX, pointY);
-                    JniBridgeJava.nativeStartMotion(0);
                     break;
                 case MotionEvent.ACTION_UP:
                     JniBridgeJava.nativeOnTouchesEnded(pointX, pointY);

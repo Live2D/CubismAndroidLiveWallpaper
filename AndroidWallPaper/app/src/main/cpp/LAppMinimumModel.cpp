@@ -17,6 +17,7 @@
 #include <Utils/CubismString.hpp>
 #include <Id/CubismIdManager.hpp>
 #include <Motion/CubismMotionQueueEntry.hpp>
+#include <Math/CubismMath.hpp>
 #include "LAppDefine.hpp"
 #include "LAppPal.hpp"
 #include "LAppTextureManager.hpp"
@@ -303,6 +304,8 @@ void LAppMinimumModel::Update()
     _dragX = _dragManager->GetX();
     _dragY = _dragManager->GetY();
 
+    LAppMinimumDelegate::GetInstance()->ParameterResetCount();
+
     // モーションによるパラメータ更新の有無
     csmBool motionUpdated = false;
 
@@ -315,6 +318,8 @@ void LAppMinimumModel::Update()
     _model->SaveParameters(); // 状態を保存
     //-----------------------------------------------------------------
 
+    bool checkCanResetParameter = (!LAppMinimumDelegate::GetInstance()->GetTapped() && !LAppMinimumDelegate::GetInstance()->GetIsSecondCount());
+
     // メインモーションの更新がないとき
     if (!motionUpdated)
     {
@@ -323,17 +328,19 @@ void LAppMinimumModel::Update()
             _eyeBlink->UpdateParameters(_model, deltaTimeSeconds); // まばたき
         }
 
-        // モデル読み込み時のパラメータとの差分を出す
-        for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i) {
-            csmFloat32 diff = _initParameterValues[i] - _model->GetParameterValue(i);
-            if (diff > 0.001f)
-            {
-                _model->AddParameterValue(i,diff * deltaTimeSeconds * 10.0f);
-            } else{
-                _model->SetParameterValue(i,_initParameterValues[i]);
+        if (checkCanResetParameter)
+        {
+            // モデル読み込み時のパラメータとの差分を出す
+            for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i) {
+                csmFloat32 diff = _initParameterValues[i] - _model->GetParameterValue(i);
+                if (CubismMath::AbsF(diff) > 0.001f)
+                {
+                    _model->AddParameterValue(i,diff * deltaTimeSeconds * 10.0f);
+                } else{
+                    _model->SetParameterValue(i,_initParameterValues[i]);
+                }
             }
         }
-        _model->SaveParameters(); // 状態を保存
     }
 
     if (_expressionManager)
@@ -341,18 +348,41 @@ void LAppMinimumModel::Update()
         _expressionManager->UpdateMotion(_model, deltaTimeSeconds); // 表情でパラメータ更新（相対変化）
     }
 
-    //ドラッグによる変化
-    //ドラッグによる顔の向きの調整
-    _model->AddParameterValue(_idParamAngleX, _dragX * 30); // -30から30の値を加える
-    _model->AddParameterValue(_idParamAngleY, _dragY * 30);
-    _model->AddParameterValue(_idParamAngleZ, _dragX * _dragY * -30);
 
-    //ドラッグによる体の向きの調整
-    _model->AddParameterValue(_idParamBodyAngleX, _dragX * 10); // -10から10の値を加える
+    if (checkCanResetParameter) {
+        //ドラッグによる変化
+        //ドラッグによる顔の向きの調整
+        _model->AddParameterValue(_idParamAngleX, _dragX * 30); // -30から30の値を加える
+        _model->AddParameterValue(_idParamAngleY, _dragY * 30);
+        _model->AddParameterValue(_idParamAngleZ, _dragX * _dragY * -30);
 
-    //ドラッグによる目の向きの調整
-    _model->AddParameterValue(_idParamEyeBallX, _dragX); // -1から1の値を加える
-    _model->AddParameterValue(_idParamEyeBallY, _dragY);
+        //ドラッグによる体の向きの調整
+        _model->AddParameterValue(_idParamBodyAngleX, _dragX * 10); // -10から10の値を加える
+
+        //ドラッグによる目の向きの調整
+        _model->AddParameterValue(_idParamEyeBallX, _dragX); // -1から1の値を加える
+        _model->AddParameterValue(_idParamEyeBallY, _dragY);
+
+        CubismLogInfo("%.2f,%.2f",_dragX,_dragY);
+    } else {
+        Csm::CubismVector2 vec = LAppMinimumDelegate::GetInstance()->GetViewPoint();
+        //CubismLogInfo("%.2f,%.2f",vec.X,vec.Y);
+
+        //向きの調整
+        //顔の向きの調整
+        _model->AddParameterValue(_idParamAngleX, vec.X * 30); // -30から30の値を加える
+        _model->AddParameterValue(_idParamAngleY, vec.Y * 30);
+        _model->AddParameterValue(_idParamAngleZ, vec.X * vec.Y * -30);
+
+        //体の向きの調整
+        _model->AddParameterValue(_idParamBodyAngleX, vec.X * 10); // -10から10の値を加える
+
+        //目の向きの調整
+        _model->AddParameterValue(_idParamEyeBallX, vec.X); // -1から1の値を加える
+        _model->AddParameterValue(_idParamEyeBallY, vec.Y);
+    }
+
+    _model->SaveParameters(); // 状態を保存
 
     // 呼吸など
     if (_breath)

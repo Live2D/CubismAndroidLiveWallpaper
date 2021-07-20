@@ -138,13 +138,17 @@ void LAppMinimumDelegate::OnSurfaceChanged(float width, float height)
 }
 
 LAppMinimumDelegate::LAppMinimumDelegate():
-    _cubismOption(),
-    _captured(false),
-    _mouseX(0.0f),
-    _mouseY(0.0f),
-    _isActive(true),
-    _width(0),
-    _height(0)
+        _cubismOption(),
+        _captured(false),
+        _mouseX(0.0f),
+        _mouseY(0.0f),
+        _isActive(true),
+        _width(0),
+        _height(0),
+        _viewPoint(0,0),
+        _tapped(false),
+        _isSecondCount(false),
+        _deltaTimeCount(0.0f)
 {
     // Setup Cubism
     _cubismOption.LogFunction = LAppPal::PrintMessage;
@@ -164,6 +168,8 @@ void LAppMinimumDelegate::OnTouchBegan(double x, double y)
 
     if (_view)
     {
+        _tapped = true;
+        _isSecondCount = false;
         _captured = true;
         _view->OnTouchesBegan(_mouseX, _mouseY);
     }
@@ -176,8 +182,11 @@ void LAppMinimumDelegate::OnTouchEnded(double x, double y)
 
     if (_view)
     {
+        _tapped = false;
+        _isSecondCount = true;
+        _deltaTimeCount = 0.0f;
         _captured = false;
-        _view->OnTouchesEnded(_mouseX, _mouseY);
+        _viewPoint = _view->OnTouchesEnded(_mouseX, _mouseY);
     }
 }
 
@@ -188,6 +197,8 @@ void LAppMinimumDelegate::OnTouchMoved(double x, double y)
 
     if (_captured && _view)
     {
+        _tapped = false;
+        _isSecondCount = false;
         _view->OnTouchesMoved(_mouseX, _mouseY);
     }
 }
@@ -241,4 +252,17 @@ void LAppMinimumDelegate::StartRandomMotion() {
 
 void LAppMinimumDelegate::StartMotion(Csm::csmInt32 index) {
     LAppMinimumLive2DManager::GetInstance()->GetModel()->StartOrderMotion(index);
+}
+
+void LAppMinimumDelegate::ParameterResetCount() {
+    if (_isSecondCount)
+    {
+        if (_deltaTimeCount > 1.0f)
+        {
+            _isSecondCount = false;
+            _deltaTimeCount = 0.0f;
+        }
+
+        _deltaTimeCount += LAppPal::GetDeltaTime();
+    }
 }
