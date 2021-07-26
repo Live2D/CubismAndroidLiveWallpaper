@@ -8,9 +8,6 @@
 
 # build directories
 /AndroidWallPaper/build/
-# third party files
-thirdParty/*
-!thirdParty/stb/*
 # Other files
 /build/
 .vs/
