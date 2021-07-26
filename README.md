@@ -50,11 +50,6 @@ Cubism Native Framework および Live2D Cubism Core と組み合わせて使用
 ダウンロードした Zip ファイルの中身を当リポジトリの `Core` ディレクトリにコピーし、プログラムにリンクさせてください。
 
 
-## ビルド方法
-
-ビルド方法は
-
-
 ## SDKマニュアル
 
 [Cubism SDK Manual](https://docs.live2d.com/cubism-sdk-manual/top/)
@@ -90,7 +85,6 @@ Cubism Native Framework および Live2D Cubism Core と組み合わせて使用
 
 | プラットフォーム | バージョン |
 | --- | --- |
-| macOS | 11.3.1 |
 | Windows 10 | 20H2 |
 
 ### Android
