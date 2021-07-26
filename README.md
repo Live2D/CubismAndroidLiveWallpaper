@@ -70,11 +70,7 @@ Cubism Native Framework および Live2D Cubism Core と組み合わせて使用
 | 開発ツール | バージョン |
 | --- | --- |
 | Android Studio | 4.2.1 |
-| CMake | 3.20.1 |
-| Visual Studio 2013 | Update 5 |
-| Visual Studio 2015 | Update 3 |
-| Visual Studio 2017 | 15.9.35 |
-| Visual Studio 2019 | 16.9.4 |
+| CMake | 3.18.1 |
 
 ### OpenGL
 
@@ -88,7 +84,6 @@ Cubism Native Framework および Live2D Cubism Core と組み合わせて使用
 | --- | --- |
 | Android NDK | 22.1.7171670 |
 | Android SDK | 30.0.3 |
-| CMake | 3.18.1 |
 
 
 ## 動作確認環境
