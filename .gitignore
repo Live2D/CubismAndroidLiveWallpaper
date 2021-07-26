@@ -10,7 +10,6 @@
 /AndroidWallPaper/build/
 # third party files
 thirdParty/*
-!thirdParty/scripts/*
 !thirdParty/stb/*
 # Other files
 /build/
