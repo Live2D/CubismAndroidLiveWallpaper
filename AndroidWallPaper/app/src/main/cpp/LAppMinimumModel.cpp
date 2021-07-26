@@ -606,7 +606,7 @@ void LAppMinimumModel::StartRandomMotion() {
     _model->LoadParameters(); // 前回セーブされた状態をロード
     if (_motionManager->IsFinished())
     {
-        // モーションの再生がない場合、始めに登録されているモーションを再生する
+        // モーションの再生がない場合、MotionGroupIdleに設定されているモーションをランダムに再生する
         StartRandomMotion(LAppDefine::MotionGroupIdle, LAppDefine::PriorityIdle);
     }
     _model->SaveParameters(); // 状態を保存
@@ -618,7 +618,7 @@ void LAppMinimumModel::StartRandomMotionWithOption(const Csm::csmChar* group, Cs
     _model->LoadParameters(); // 前回セーブされた状態をロード
     if (_motionManager->IsFinished())
     {
-        // モーションの再生がない場合、始めに登録されているモーションを再生する
+        // モーションの再生がない場合、groupに設定されているモーションをランダムに再生する
         StartRandomMotion(group, priority,onFinishedMotionHandler);
     }
     _model->SaveParameters(); // 状態を保存

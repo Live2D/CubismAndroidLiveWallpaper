@@ -46,6 +46,7 @@ public class LiveWallpaperService extends GLWallpaperService {
             super.onCreate(surfaceHolder);
 
             // Check if the system supports OpenGL ES 2.0.
+            // システムがOpenGL ES 2.0に対応しているかのチェック
             final ActivityManager activityManager =
                     (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
             final ConfigurationInfo configurationInfo =
@@ -56,14 +57,16 @@ public class LiveWallpaperService extends GLWallpaperService {
             if (supportsEs2)
             {
                 // Request an OpenGL ES 2.0 compatible context.
+                // OpenGL ES 2.0互換のコンテキストを要求
                 setEGLContextClientVersion(2);
 
                 // On Honeycomb+ devices, this improves the performance when
                 // leaving and resuming the live wallpaper.
+                // Honeycomb以降のデバイスでは、ライブ壁紙を終了して再開した際のパフォーマンスが向上します。
                 setPreserveEGLContextOnPause(true);
 
-                // handle prefs, other initialization
-                // Set the renderer to our user-defined renderer.
+                // Set the renderer.
+                // レンダラーの設定
                 renderer = new Live2DGLRenderer(getApplicationContext());
                 setRenderer(renderer);
             }
