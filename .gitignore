@@ -1,11 +1,3 @@
-# Core directory files
-/Core/**/*.a
-/Core/**/*.bundle
-/Core/**/*.dll
-/Core/**/*.dylib
-/Core/**/*.lib
-/Core/**/*.so
-
 # build directories
 /AndroidWallPaper/build/
 # Other files
