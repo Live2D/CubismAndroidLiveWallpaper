@@ -4,8 +4,10 @@ Live2D Cubism 4 Editor で出力したモデルを表示するLiveWallpaperア�
 
 Cubism Native Framework および Live2D Cubism Core と組み合わせて使用します。
 
-事前に下記の SDK のダウンロードが必要です
+利用には事前に下記のダウンロードが必要です
 
+* AndroidStudio
+* Android SDK
 * Android SDK Build-Tools
 * NDK
 * CMake
