@@ -1,7 +1,0 @@
-# Core directory files
-*.a
-*.bundle
-*.dll
-*.dylib
-*.lib
-*.so
