@@ -330,7 +330,7 @@ void LAppMinimumModel::Update()
 
         if (checkCanResetParameter)
         {
-            // モデル読み込み時のパラメータとの差分を出す
+            // モデル読み込み時のパラメータとの差分を出し、元に戻す
             for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i) {
                 csmFloat32 diff = _initParameterValues[i] - _model->GetParameterValue(i);
                 if (CubismMath::AbsF(diff) > 0.001f)
@@ -364,18 +364,17 @@ void LAppMinimumModel::Update()
         _model->AddParameterValue(_idParamEyeBallY, _dragY);
     } else {
         Csm::CubismVector2 vec = LAppMinimumDelegate::GetInstance()->GetViewPoint();
-        //CubismLogInfo("%.2f,%.2f",vec.X,vec.Y);
 
-        //向きの調整
-        //顔の向きの調整
+        //タップによる向きの調整
+        //タップによる顔の向きの調整
         _model->AddParameterValue(_idParamAngleX, vec.X * 30); // -30から30の値を加える
         _model->AddParameterValue(_idParamAngleY, vec.Y * 30);
         _model->AddParameterValue(_idParamAngleZ, vec.X * vec.Y * -30);
 
-        //体の向きの調整
+        //タップによる体の向きの調整
         _model->AddParameterValue(_idParamBodyAngleX, vec.X * 10); // -10から10の値を加える
 
-        //目の向きの調整
+        //タップによる目の向きの調整
         _model->AddParameterValue(_idParamEyeBallX, vec.X); // -1から1の値を加える
         _model->AddParameterValue(_idParamEyeBallY, vec.Y);
     }

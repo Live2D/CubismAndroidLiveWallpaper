@@ -69,7 +69,7 @@ Cubism Native Framework および Live2D Cubism Core と組み合わせて使用
 | Android Studio | 4.2.1 |
 | CMake | 3.18.1 |
 
-### OpenGL
+### Thirdparty
 
 | サードパーティ | バージョン |
 | -------------- | ---------- |
