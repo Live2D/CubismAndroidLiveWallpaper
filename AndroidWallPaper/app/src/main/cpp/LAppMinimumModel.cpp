@@ -181,7 +181,8 @@ void LAppMinimumModel::SetupModel()
 
     // モデル読み込み時のパラメータを保存
     _initParameterValues = new csmFloat32[_model->GetParameterCount()];
-    for (int i = 0; i < _model->GetParameterCount(); ++i) {
+    for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i) 
+    {
         _initParameterValues[i] = _model->GetParameterValue(i);
     }
 
