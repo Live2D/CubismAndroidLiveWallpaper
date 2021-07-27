@@ -10,6 +10,7 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include "LAppAllocator.hpp"
+#include "Math/CubismVector2.hpp"
 
 class LAppMinimumView;
 class LAppTextureManager;
@@ -97,9 +98,24 @@ public:
     void OnTouchMoved(double x, double y);
 
     /**
+    * @brief ランダムなモーションの開始
+    */
+    void StartRandomMotion();
+
+    /**
+    * @brief モーションの開始
+    */
+    void StartMotion(Csm::csmInt32 index);
+
+    /**
     * @brief シェーダーを登録する。
     */
     GLuint CreateShader();
+
+    /**
+    * @brief パラメータを初期状態に戻すまでの時間をカウントする。
+    */
+    void ParameterResetCount();
 
     /**
     * @brief テクスチャマネージャーの取得
@@ -117,14 +133,24 @@ public:
     int GetWindowHeight() { return _height; }
 
     /**
-    * @brief   アプリケーションを非アクティブにする。
-    */
-    void DeActivateApp() { _isActive = false; }
-
-    /**
     * @brief   View情報を取得する。
     */
     LAppMinimumView* GetView() { return _view; }
+
+    /**
+    * @brief   View座標を取得する。
+    */
+    Csm::CubismVector2 GetViewPoint() { return _viewPoint; }
+
+    /**
+    * @brief   タップ状態かを取得する。
+    */
+    bool GetTapped() { return _tapped; }
+
+    /**
+    * @brief   タップ状態から解放されたかどうかを取得する。
+    */
+    bool GetIsSecondCount() { return _isSecondCount; }
 
 private:
     /**
@@ -144,7 +170,12 @@ private:
     int _width;                                  ///< Windowの幅
     int _height;                                 ///< windowの高さ
     bool _captured;                              ///< クリックしているか
+    bool _tapped;                                ///< タップ状態か
+    bool _isSecondCount;                         ///< 時間をカウントしているか
     bool _isActive;                              ///< アプリがアクティブ状態なのか
     float _mouseY;                               ///< マウスY座標
     float _mouseX;                               ///< マウスX座標
+
+    Csm::CubismVector2 _viewPoint;               ///< ビュー座標
+    Csm::csmFloat32 _deltaTimeCount;             ///< 経過したデルタ時間
 };

@@ -13,6 +13,7 @@
 #include <Math/CubismViewMatrix.hpp>
 #include "CubismFramework.hpp"
 #include <Rendering/OpenGL/CubismOffscreenSurface_OpenGLES2.hpp>
+#include <Math/CubismVector2.hpp>
 
 class TouchManager;
 class LAppSprite;
@@ -86,8 +87,10 @@ public:
     *
     * @param[in]       pointX            スクリーンX座標
     * @param[in]       pointY            スクリーンY座標
+    *
+    * @return viewPoint ビュー座標
     */
-    void OnTouchesEnded(float pointX, float pointY);
+    Csm::CubismVector2 OnTouchesEnded(float pointX, float pointY);
 
     /**
     * @brief X座標をView座標に変換する。

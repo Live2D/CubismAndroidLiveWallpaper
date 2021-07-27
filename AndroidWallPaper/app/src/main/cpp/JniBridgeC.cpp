@@ -15,7 +15,6 @@ using namespace Csm;
 static JavaVM* g_JVM; // JavaVM is valid for all threads, so just save it globally
 static jclass  g_JniBridgeJavaClass;
 static jmethodID g_LoadFileMethodId;
-static jmethodID g_MoveTaskToBackMethodId;
 
 JNIEnv* GetEnv()
 {
@@ -38,7 +37,6 @@ jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
     jclass clazz = env->FindClass("com/live2d/demo/JniBridgeJava");
     g_JniBridgeJavaClass = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
     g_LoadFileMethodId = env->GetStaticMethodID(g_JniBridgeJavaClass, "LoadFile", "(Ljava/lang/String;)[B");
-    g_MoveTaskToBackMethodId = env->GetStaticMethodID(g_JniBridgeJavaClass, "MoveTaskToBack", "()V");
 
     return JNI_VERSION_1_6;
 }
@@ -61,14 +59,6 @@ char* JniBridgeC::LoadFileAsBytesFromJava(const char* filePath, unsigned int* ou
     env->GetByteArrayRegion(obj, 0, *outSize, reinterpret_cast<jbyte *>(buffer));
 
     return buffer;
-}
-
-void JniBridgeC::MoveTaskToBack()
-{
-    JNIEnv *env = GetEnv();
-
-    // アプリ終了
-    env->CallStaticVoidMethod(g_JniBridgeJavaClass, g_MoveTaskToBackMethodId, NULL);
 }
 
 extern "C"
@@ -131,6 +121,18 @@ extern "C"
     Java_com_live2d_demo_JniBridgeJava_nativeOnTouchesMoved(JNIEnv *env, jclass type, jfloat pointX, jfloat pointY)
     {
         LAppMinimumDelegate::GetInstance()->OnTouchMoved(pointX, pointY);
+    }
+
+    JNIEXPORT void JNICALL
+    Java_com_live2d_demo_JniBridgeJava_nativeRandomStartMotion(JNIEnv *env, jclass type)
+    {
+        LAppMinimumDelegate::GetInstance()->StartRandomMotion();
+    }
+
+    JNIEXPORT void JNICALL
+    Java_com_live2d_demo_JniBridgeJava_nativeStartMotion(JNIEnv *env, jclass type, jint index)
+    {
+        LAppMinimumDelegate::GetInstance()->StartMotion(index);
     }
 }
 

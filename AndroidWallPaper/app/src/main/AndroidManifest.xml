@@ -5,6 +5,7 @@
     android:screenOrientation="portrait">
 
     <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <uses-feature android:name="android.software.live_wallpaper" android:required="true" />
 
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
@@ -17,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name="com.live2d.demo.MainActivity"
+            android:name="com.live2d.demo.LiveWallpaperService"
             android:label="@string/title_activity_sample"
             android:permission="android.permission.BIND_WALLPAPER" >
             <intent-filter>

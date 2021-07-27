@@ -8,6 +8,7 @@
 #include "LAppMinimumModel.hpp"
 #include <fstream>
 #include <vector>
+#include <Live2DCubismCore.hpp>
 #include <CubismModelSettingJson.hpp>
 #include <Motion/CubismMotion.hpp>
 #include <Physics/CubismPhysics.hpp>
@@ -16,6 +17,7 @@
 #include <Utils/CubismString.hpp>
 #include <Id/CubismIdManager.hpp>
 #include <Motion/CubismMotionQueueEntry.hpp>
+#include <Math/CubismMath.hpp>
 #include "LAppDefine.hpp"
 #include "LAppPal.hpp"
 #include "LAppTextureManager.hpp"
@@ -133,7 +135,8 @@ void LAppMinimumModel::SetupModel()
     {
         LoadAssets(_modelJson->GetExpressionFileName(expressionIndex), [=](Csm::csmByte* buffer, Csm::csmSizeInt bufferSize) {
             auto expressionName = _modelJson->GetExpressionName(expressionIndex);
-            LoadExpression(buffer, bufferSize, expressionName);
+            ACubismMotion* motion = LoadExpression(buffer, bufferSize, expressionName);
+            _expressions[expressionName] = motion;
         });
     }
 
@@ -152,6 +155,21 @@ void LAppMinimumModel::SetupModel()
         LoadUserData(buffer, bufferSize);
     });
 
+    // Breathの作成
+    {
+        _breath = CubismBreath::Create();
+
+        csmVector<CubismBreath::BreathParameterData> breathParameters;
+
+        breathParameters.PushBack(CubismBreath::BreathParameterData(_idParamAngleX, 0.0f, 15.0f, 6.5345f, 0.5f));
+        breathParameters.PushBack(CubismBreath::BreathParameterData(_idParamAngleY, 0.0f, 8.0f, 3.5345f, 0.5f));
+        breathParameters.PushBack(CubismBreath::BreathParameterData(_idParamAngleZ, 0.0f, 10.0f, 5.5345f, 0.5f));
+        breathParameters.PushBack(CubismBreath::BreathParameterData(_idParamBodyAngleX, 0.0f, 4.0f, 15.5345f, 0.5f));
+        breathParameters.PushBack(CubismBreath::BreathParameterData(CubismFramework::GetIdManager()->GetId(ParamBreath), 0.5f, 0.5f, 3.2345f, 0.5f));
+
+        _breath->SetParameters(breathParameters);
+    }
+
     // Layout
     csmMap<csmString, csmFloat32> layout;
     _modelJson->GetLayoutMap(layout);
@@ -160,6 +178,13 @@ void LAppMinimumModel::SetupModel()
 
     // パラメータを保存
     _model->SaveParameters();
+
+    // モデル読み込み時のパラメータを保存
+    _initParameterValues = new csmFloat32[_model->GetParameterCount()];
+    for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i) 
+    {
+        _initParameterValues[i] = _model->GetParameterValue(i);
+    }
 
     // モーションデータの読み込み
     for (csmInt32 i = 0; i < _modelJson->GetMotionGroupCount(); i++)
@@ -281,30 +306,44 @@ void LAppMinimumModel::Update()
     _dragX = _dragManager->GetX();
     _dragY = _dragManager->GetY();
 
+    LAppMinimumDelegate* delegateInstance = LAppMinimumDelegate::GetInstance();
+    delegateInstance->ParameterResetCount();
+
     // モーションによるパラメータ更新の有無
     csmBool motionUpdated = false;
 
     //-----------------------------------------------------------------
     _model->LoadParameters(); // 前回セーブされた状態をロード
-    if (_motionManager->IsFinished())
-    {
-        // モーションの再生がない場合、始めに登録されているモーションを再生する
-        StartMotion(LAppDefine::MotionGroupIdle, 0, LAppDefine::PriorityIdle);
-    }
-    else
+    if (!_motionManager->IsFinished())
     {
         motionUpdated = _motionManager->UpdateMotion(_model, deltaTimeSeconds); // モーションを更新
     }
     _model->SaveParameters(); // 状態を保存
     //-----------------------------------------------------------------
 
-    // まばたき
+    bool canResetParameter = (!delegateInstance->GetTapped() && !delegateInstance->GetIsSecondCount());
+
+    // メインモーションの更新がないとき
     if (!motionUpdated)
     {
         if (_eyeBlink)
         {
-            // メインモーションの更新がないとき
-            _eyeBlink->UpdateParameters(_model, deltaTimeSeconds); // 目パチ
+            _eyeBlink->UpdateParameters(_model, deltaTimeSeconds); // まばたき
+        }
+
+        if (canResetParameter)
+        {
+            // モデル読み込み時のパラメータとの差分を出し、元に戻す
+            for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i)
+            {
+                csmFloat32 diff = _initParameterValues[i] - _model->GetParameterValue(i);
+                if (CubismMath::AbsF(diff) > 0.001f)
+                {
+                    _model->AddParameterValue(i,diff * deltaTimeSeconds * 10.0f);
+                } else{
+                    _model->SetParameterValue(i,_initParameterValues[i]);
+                }
+            }
         }
     }
 
@@ -313,18 +352,41 @@ void LAppMinimumModel::Update()
         _expressionManager->UpdateMotion(_model, deltaTimeSeconds); // 表情でパラメータ更新（相対変化）
     }
 
-    //ドラッグによる変化
-    //ドラッグによる顔の向きの調整
-    _model->AddParameterValue(_idParamAngleX, _dragX * 30); // -30から30の値を加える
-    _model->AddParameterValue(_idParamAngleY, _dragY * 30);
-    _model->AddParameterValue(_idParamAngleZ, _dragX * _dragY * -30);
 
-    //ドラッグによる体の向きの調整
-    _model->AddParameterValue(_idParamBodyAngleX, _dragX * 10); // -10から10の値を加える
+    if (canResetParameter)
+    {
+        //ドラッグによる変化
+        //ドラッグによる顔の向きの調整
+        _model->AddParameterValue(_idParamAngleX, _dragX * 30); // -30から30の値を加える
+        _model->AddParameterValue(_idParamAngleY, _dragY * 30);
+        _model->AddParameterValue(_idParamAngleZ, _dragX * _dragY * -30);
 
-    //ドラッグによる目の向きの調整
-    _model->AddParameterValue(_idParamEyeBallX, _dragX); // -1から1の値を加える
-    _model->AddParameterValue(_idParamEyeBallY, _dragY);
+        //ドラッグによる体の向きの調整
+        _model->AddParameterValue(_idParamBodyAngleX, _dragX * 10); // -10から10の値を加える
+
+        //ドラッグによる目の向きの調整
+        _model->AddParameterValue(_idParamEyeBallX, _dragX); // -1から1の値を加える
+        _model->AddParameterValue(_idParamEyeBallY, _dragY);
+    }
+    else
+    {
+        Csm::CubismVector2 vec = delegateInstance->GetViewPoint();
+
+        //タップによる向きの調整
+        //タップによる顔の向きの調整
+        _model->AddParameterValue(_idParamAngleX, vec.X * 30); // -30から30の値を加える
+        _model->AddParameterValue(_idParamAngleY, vec.Y * 30);
+        _model->AddParameterValue(_idParamAngleZ, vec.X * vec.Y * -30);
+
+        //タップによる体の向きの調整
+        _model->AddParameterValue(_idParamBodyAngleX, vec.X * 10); // -10から10の値を加える
+
+        //タップによる目の向きの調整
+        _model->AddParameterValue(_idParamEyeBallX, vec.X); // -1から1の値を加える
+        _model->AddParameterValue(_idParamEyeBallY, vec.Y);
+    }
+
+    _model->SaveParameters(); // 状態を保存
 
     // 呼吸など
     if (_breath)
@@ -346,6 +408,18 @@ void LAppMinimumModel::Update()
 
     _model->Update();
 
+}
+
+CubismMotionQueueEntryHandle LAppMinimumModel::StartRandomMotion(const csmChar* group, csmInt32 priority, ACubismMotion::FinishedMotionCallback onFinishedMotionHandler)
+{
+    if (!_modelJson->GetMotionCount(group))
+    {
+        return InvalidMotionQueueEntryHandleValue;
+    }
+
+    csmInt32 no = rand() % _modelJson->GetMotionCount(group);
+
+    return StartMotion(group, no, priority, onFinishedMotionHandler);
 }
 
 CubismMotionQueueEntryHandle LAppMinimumModel::StartMotion(const csmChar* group, csmInt32 no, csmInt32 priority, ACubismMotion::FinishedMotionCallback onFinishedMotionHandler)
@@ -414,6 +488,25 @@ CubismMotionQueueEntryHandle LAppMinimumModel::StartMotion(const csmChar* group,
     return  _motionManager->StartMotionPriority(motion, autoDelete, priority);
 }
 
+csmBool LAppMinimumModel::HitTest(const csmChar* hitAreaName, csmFloat32 x, csmFloat32 y)
+{
+    // 透明時は当たり判定なし。
+    if (_opacity < 1)
+    {
+        return false;
+    }
+    const csmInt32 count = _modelJson->GetHitAreasCount();
+    for (csmInt32 i = 0; i < count; i++)
+    {
+        if (!strcmp(_modelJson->GetHitAreaName(i), hitAreaName))
+        {
+            const CubismIdHandle drawID = _modelJson->GetHitAreaId(i);
+            return IsHit(drawID, x, y);
+        }
+    }
+    return false; // 存在しない場合はfalse
+}
+
 void LAppMinimumModel::Draw(CubismMatrix44& matrix)
 {
     if (!_model)
@@ -443,6 +536,19 @@ void LAppMinimumModel::SetExpression(const csmChar* expressionID)
     {
         if (_debugMode) LAppPal::PrintLog("[APP]expression[%s] is null ", expressionID);
     }
+}
+
+void LAppMinimumModel::SetRandomExpression()
+{
+    if (!_expressions.GetSize())
+    {
+        return;
+    }
+
+    csmInt32 no = rand() % _expressions.GetSize();
+    csmMap<csmString, ACubismMotion*>::const_iterator map_ite(&_expressions,no);
+    csmString name = (*map_ite).First;
+    SetExpression(name.GetRawString());
 }
 
 void LAppMinimumModel::ReloadRenderer()
@@ -490,4 +596,40 @@ void LAppMinimumModel::MotionEventFired(const csmString& eventValue)
 Csm::Rendering::CubismOffscreenFrame_OpenGLES2 &LAppMinimumModel::GetRenderBuffer()
 {
     return _renderBuffer;
+}
+
+void LAppMinimumModel::StartRandomMotion() {
+    //-----------------------------------------------------------------
+    _model->LoadParameters(); // 前回セーブされた状態をロード
+    if (_motionManager->IsFinished())
+    {
+        // モーションの再生がない場合、MotionGroupIdleに設定されているモーションをランダムに再生する
+        StartRandomMotion(LAppDefine::MotionGroupIdle, LAppDefine::PriorityIdle);
+    }
+    _model->SaveParameters(); // 状態を保存
+    //-----------------------------------------------------------------
+}
+
+void LAppMinimumModel::StartRandomMotionWithOption(const Csm::csmChar* group, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler) {
+    //-----------------------------------------------------------------
+    _model->LoadParameters(); // 前回セーブされた状態をロード
+    if (_motionManager->IsFinished())
+    {
+        // モーションの再生がない場合、groupに設定されているモーションをランダムに再生する
+        StartRandomMotion(group, priority,onFinishedMotionHandler);
+    }
+    _model->SaveParameters(); // 状態を保存
+    //-----------------------------------------------------------------
+}
+
+void LAppMinimumModel::StartOrderMotion(const Csm::csmChar* group,Csm::csmInt32 index, Csm::csmInt32 priority) {
+    //-----------------------------------------------------------------
+    _model->LoadParameters(); // 前回セーブされた状態をロード
+    if (_motionManager->IsFinished())
+    {
+        // モーションの再生がない場合、始めに登録されているモーションを再生する
+        StartMotion(group,index, priority);
+    }
+    _model->SaveParameters(); // 状態を保存
+    //-----------------------------------------------------------------
 }

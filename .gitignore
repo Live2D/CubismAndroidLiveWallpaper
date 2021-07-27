@@ -6,12 +6,11 @@
 /Core/**/*.lib
 /Core/**/*.so
 
+# Sample third party files
+/Samples/**/thirdParty/*
+!/Samples/OpenGL/thirdParty/stb/*
 # build directories
 /AndroidWallPaper/build/
-# third party files
-thirdParty/*
-!thirdParty/scripts/*
-!thirdParty/stb/*
 # Other files
 /build/
 .vs/

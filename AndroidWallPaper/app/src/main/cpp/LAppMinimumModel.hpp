@@ -64,6 +64,27 @@ public:
     void Update();
 
     /**
+     * @brief   ランダムなモーションを再生する（Java呼び出し用）
+     *
+     */
+    void StartRandomMotion();
+
+    /**
+     * @brief   ランダムに選ばれたモーションの再生を開始する。
+     *
+     * @param[in]   group                       モーショングループ名
+     * @param[in]   priority                    優先度
+     * @param[in]   onFinishedMotionHandler     モーション再生終了時に呼び出されるコールバック関数。NULLの場合、呼び出されない。
+     */
+    void StartRandomMotionWithOption(const Csm::csmChar* group, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler = NULL);
+
+    /**
+     * @brief   指定したモーションを再生する（Java呼び出し用）
+     *
+     */
+    void StartOrderMotion(const Csm::csmChar* group,Csm::csmInt32 index,Csm::csmInt32 priority);
+
+    /**
      * @brief   モデルを描画する処理。モデルを描画する空間のView-Projection行列を渡す。
      *
      * @param[in]  matrix  View-Projection行列
@@ -71,22 +92,17 @@ public:
     void Draw(Csm::CubismMatrix44& matrix);
 
     /**
-     * @brief   引数で指定したモーションの再生を開始する。
-     *
-     * @param[in]   group                       モーショングループ名
-     * @param[in]   no                          グループ内の番号
-     * @param[in]   priority                    優先度
-     * @param[in]   onFinishedMotionHandler     モーション再生終了時に呼び出されるコールバック関数。NULLの場合、呼び出されない。
-     * @return                                  開始したモーションの識別番号を返す。個別のモーションが終了したか否かを判定するIsFinished()の引数で使用する。開始できない時は「-1」
-     */
-    Csm::CubismMotionQueueEntryHandle StartMotion(const Csm::csmChar* group, Csm::csmInt32 no, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler = NULL);
-
-    /**
      * @brief   引数で指定した表情モーションをセットする
      *
      * @param   expressionID    表情モーションのID
      */
     void SetExpression(const Csm::csmChar* expressionID);
+
+    /**
+     * @brief   ランダムに選ばれた表情モーションをセットする
+     *
+     */
+    void SetRandomExpression();
 
     /**
     * @brief   イベントの発火を受け取る
@@ -104,6 +120,16 @@ public:
     * @brief   別ターゲットに描画する際に使用するバッファの取得
     */
     Csm::Rendering::CubismOffscreenFrame_OpenGLES2& GetRenderBuffer();
+
+    /**
+     * @brief    当たり判定テスト。<br>
+     *            指定IDの頂点リストから矩形を計算し、座標が矩形範囲内か判定する。
+     *
+     * @param[in]   hitAreaName     当たり判定をテストする対象のID
+     * @param[in]   x               判定を行うX座標
+     * @param[in]   y               判定を行うY座標
+     */
+    virtual Csm::csmBool HitTest(const Csm::csmChar* hitAreaName, Csm::csmFloat32 x, Csm::csmFloat32 y);
 
 private:
     /**
@@ -142,6 +168,27 @@ private:
     */
     void ReleaseExpressions();
 
+    /**
+     * @brief   ランダムに選ばれたモーションの再生を開始する。
+     *
+     * @param[in]   group                       モーショングループ名
+     * @param[in]   priority                    優先度
+     * @param[in]   onFinishedMotionHandler     モーション再生終了時に呼び出されるコールバック関数。NULLの場合、呼び出されない。
+     * @return                                  開始したモーションの識別番号を返す。個別のモーションが終了したか否かを判定するIsFinished()の引数で使用する。開始できない時は「-1」
+     */
+    Csm::CubismMotionQueueEntryHandle StartRandomMotion(const Csm::csmChar* group, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler = NULL);
+
+    /**
+     * @brief   引数で指定したモーションの再生を開始する。
+     *
+     * @param[in]   group                       モーショングループ名
+     * @param[in]   no                          グループ内の番号
+     * @param[in]   priority                    優先度
+     * @param[in]   onFinishedMotionHandler     モーション再生終了時に呼び出されるコールバック関数。NULLの場合、呼び出されない。
+     * @return                                  開始したモーションの識別番号を返す。個別のモーションが終了したか否かを判定するIsFinished()の引数で使用する。開始できない時は「-1」
+     */
+    Csm::CubismMotionQueueEntryHandle StartMotion(const Csm::csmChar* group, Csm::csmInt32 no, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler = NULL);
+
     Csm::CubismModelSettingJson* _modelJson; ///< モデルセッティング情報
     std::string _modelDirName; ///< モデルセッティングが置かれたディレクトリの名称
     std::string _currentModelDirectory; ///< モデルセッティングが置かれたディレクトリ
@@ -157,6 +204,8 @@ private:
     const Csm::CubismId* _idParamEyeBallY; ///< パラメータID: ParamEyeBallXY
 
     Csm::Rendering::CubismOffscreenFrame_OpenGLES2  _renderBuffer;   ///< フレームバッファ以外の描画先
+
+    Csm::csmFloat32* _initParameterValues;                       ///< パラメータの初期値のリスト
 };
 
 

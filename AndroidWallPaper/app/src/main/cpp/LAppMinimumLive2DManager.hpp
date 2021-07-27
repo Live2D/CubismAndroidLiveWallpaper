@@ -59,6 +59,14 @@ public:
     void OnDrag(Csm::csmFloat32 x, Csm::csmFloat32 y) const;
 
     /**
+    * @brief   画面をタップしたときの処理
+    *
+    * @param[in]   x   画面のX座標
+    * @param[in]   y   画面のY座標
+    */
+    void OnTap(Csm::csmFloat32 x, Csm::csmFloat32 y);
+
+    /**
     * @brief   画面を更新するときの処理
     *          モデルの更新処理および描画処理を行う
     */

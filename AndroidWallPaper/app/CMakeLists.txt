@@ -41,6 +41,7 @@ target_link_libraries(${APP_NAME}
   Framework
   Live2DCubismCore
   GLESv2
+  EGL
   log
 )
 # Specify include directories.

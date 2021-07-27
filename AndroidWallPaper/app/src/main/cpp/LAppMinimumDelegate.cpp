@@ -8,12 +8,16 @@
 #include "LAppMinimumDelegate.hpp"
 #include <iostream>
 #include <GLES2/gl2.h>
+#include <EGL/egl.h>
 #include "LAppMinimumView.hpp"
 #include "LAppPal.hpp"
 #include "LAppDefine.hpp"
 #include "LAppMinimumLive2DManager.hpp"
 #include "LAppTextureManager.hpp"
 #include "JniBridgeC.hpp"
+
+#include "Utils/CubismDebug.hpp"
+#include "LAppMinimumModel.hpp"
 
 using namespace Csm;
 using namespace std;
@@ -46,8 +50,6 @@ void LAppMinimumDelegate::ReleaseInstance()
 
 void LAppMinimumDelegate::OnStart()
 {
-    _textureManager = new LAppTextureManager();
-    _view = new LAppMinimumView();
     LAppPal::UpdateTime();
 }
 
@@ -95,15 +97,19 @@ void LAppMinimumDelegate::Run()
     {
         _view->Render();
     }
-
-    if(!_isActive)
-    {
-        JniBridgeC::MoveTaskToBack();
-    }
 }
 
 void LAppMinimumDelegate::OnSurfaceCreate()
 {
+    _view = new LAppMinimumView();
+    _textureManager = new LAppTextureManager();
+
+    // setup view
+    int width,height;
+    glViewport(0, 0, width, height);
+    _width = width;
+    _height = height;
+
     //テクスチャサンプリング設定
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -137,15 +143,13 @@ LAppMinimumDelegate::LAppMinimumDelegate():
     _mouseX(0.0f),
     _mouseY(0.0f),
     _isActive(true),
-    _textureManager(nullptr),
-    _view(nullptr)
+    _width(0),
+    _height(0),
+    _viewPoint(0,0),
+    _tapped(false),
+    _isSecondCount(false),
+    _deltaTimeCount(0.0f)
 {
-    // setup view
-    int width,height;
-    glViewport(0, 0, width, height);
-    _width = width;
-    _height = height;
-
     // Setup Cubism
     _cubismOption.LogFunction = LAppPal::PrintMessage;
     _cubismOption.LoggingLevel = LAppDefine::CubismLoggingLevel;
@@ -164,6 +168,8 @@ void LAppMinimumDelegate::OnTouchBegan(double x, double y)
 
     if (_view)
     {
+        _tapped = true;
+        _isSecondCount = false;
         _captured = true;
         _view->OnTouchesBegan(_mouseX, _mouseY);
     }
@@ -176,8 +182,11 @@ void LAppMinimumDelegate::OnTouchEnded(double x, double y)
 
     if (_view)
     {
+        _tapped = false;
+        _isSecondCount = true;
+        _deltaTimeCount = 0.0f;
         _captured = false;
-        _view->OnTouchesEnded(_mouseX, _mouseY);
+        _viewPoint = _view->OnTouchesEnded(_mouseX, _mouseY);
     }
 }
 
@@ -188,6 +197,8 @@ void LAppMinimumDelegate::OnTouchMoved(double x, double y)
 
     if (_captured && _view)
     {
+        _tapped = false;
+        _isSecondCount = false;
         _view->OnTouchesMoved(_mouseX, _mouseY);
     }
 }
@@ -233,4 +244,25 @@ GLuint LAppMinimumDelegate::CreateShader()
     glUseProgram(programId);
 
     return programId;
+}
+
+void LAppMinimumDelegate::StartRandomMotion() {
+    LAppMinimumLive2DManager::GetInstance()->GetModel()->StartRandomMotion();
+}
+
+void LAppMinimumDelegate::StartMotion(Csm::csmInt32 index) {
+    LAppMinimumLive2DManager::GetInstance()->GetModel()->StartOrderMotion(MotionGroupIdle,index,PriorityIdle);
+}
+
+void LAppMinimumDelegate::ParameterResetCount() {
+    if (_isSecondCount)
+    {
+        if (_deltaTimeCount > 1.0f)
+        {
+            _isSecondCount = false;
+            _deltaTimeCount = 0.0f;
+        }
+
+        _deltaTimeCount += LAppPal::GetDeltaTime();
+    }
 }
