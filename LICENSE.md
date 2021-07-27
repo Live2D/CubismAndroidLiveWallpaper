@@ -2,11 +2,11 @@
 
 ### Live2D Cubism Components
 
-Cubism Native Samples is included in Live2D Cubism Components.
+Cubism Android Wallpaper Sample is included in Live2D Cubism Components.
 
-Cubism Native Samples は Live2D Cubism Components に含まれます。
+Cubism Android Wallpaper Sample は Live2D Cubism Components に含まれます。
 
-Cubism Native Samples 包括在 Live2D Cubism Components 中。
+Cubism Android Wallpaper Sample 包括在 Live2D Cubism Components 中。
 
 ## Cubism SDK Release License
 

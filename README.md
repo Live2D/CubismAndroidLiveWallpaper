@@ -1,6 +1,6 @@
 # Cubism Android Wallpaper Sample
 
-Live2D Cubism 4 Editor で出力したモデルを表示するLiveWallpaperアプリケーションのサンプルです。
+Live2D Cubism 4 Editor で出力したモデルを表示する LiveWallpaper アプリケーションのサンプルです。
 
 Cubism Native Framework および Live2D Cubism Core と組み合わせて使用します。
 
@@ -9,7 +9,7 @@ Cubism Native Framework および Live2D Cubism Core と組み合わせて使用
 * AndroidStudio
 * Android SDK
 * Android SDK Build-Tools
-* NDK
+* Android NDK
 * CMake
 
 
@@ -40,16 +40,17 @@ Cubism Native Framework および Live2D Cubism Core と組み合わせて使用
 当リポジトリには Cubism Native Framework は同梱されていません。
 
 ダウンロードするには[こちら](https://www.live2d.com/download/cubism-sdk/download-native/)のページを参照ください。
-ダウンロードした Zip ファイルの中身を当リポジトリの `Framework` ディレクトリにコピーし、プログラムにリンクさせてください。
+ダウンロードした Zip ファイルの中身を当リポジトリの `Framework` ディレクトリにコピーしてください。
 
 
 ## Live2D Cubism Core for Native
 
-モデルをロードするためのライブラリです。
+Cubism Native Frameworkを利用するために必要なライブラリです。
+
 当リポジトリには Live2D Cubism Core for Native は同梱されていません。
 
 ダウンロードするには[こちら](https://www.live2d.com/download/cubism-sdk/download-native/)のページを参照ください。
-ダウンロードした Zip ファイルの中身を当リポジトリの `Core` ディレクトリにコピーし、プログラムにリンクさせてください。
+ダウンロードした Zip ファイルの中身を当リポジトリの `Core` ディレクトリにコピーしてください。
 
 
 ## SDKマニュアル
@@ -74,6 +75,7 @@ Cubism Native Framework および Live2D Cubism Core と組み合わせて使用
 | サードパーティ | バージョン |
 | -------------- | ---------- |
 | [stb_image.h]  | 2.23       |
+| [GLWallpaperService.java]  | 0.9.2       |
 
 ### Android
 
