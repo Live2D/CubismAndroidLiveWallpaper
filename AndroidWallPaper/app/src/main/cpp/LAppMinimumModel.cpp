@@ -135,7 +135,8 @@ void LAppMinimumModel::SetupModel()
     {
         LoadAssets(_modelJson->GetExpressionFileName(expressionIndex), [=](Csm::csmByte* buffer, Csm::csmSizeInt bufferSize) {
             auto expressionName = _modelJson->GetExpressionName(expressionIndex);
-            LoadExpression(buffer, bufferSize, expressionName);
+            ACubismMotion* motion = LoadExpression(buffer, bufferSize, expressionName);
+            _expressions[expressionName] = motion;
         });
     }
 
@@ -304,7 +305,8 @@ void LAppMinimumModel::Update()
     _dragX = _dragManager->GetX();
     _dragY = _dragManager->GetY();
 
-    LAppMinimumDelegate::GetInstance()->ParameterResetCount();
+    LAppMinimumDelegate* delegateInstance = LAppMinimumDelegate::GetInstance();
+    delegateInstance->ParameterResetCount();
 
     // モーションによるパラメータ更新の有無
     csmBool motionUpdated = false;
@@ -318,7 +320,7 @@ void LAppMinimumModel::Update()
     _model->SaveParameters(); // 状態を保存
     //-----------------------------------------------------------------
 
-    bool checkCanResetParameter = (!LAppMinimumDelegate::GetInstance()->GetTapped() && !LAppMinimumDelegate::GetInstance()->GetIsSecondCount());
+    bool canResetParameter = (!delegateInstance->GetTapped() && !delegateInstance->GetIsSecondCount());
 
     // メインモーションの更新がないとき
     if (!motionUpdated)
@@ -328,10 +330,11 @@ void LAppMinimumModel::Update()
             _eyeBlink->UpdateParameters(_model, deltaTimeSeconds); // まばたき
         }
 
-        if (checkCanResetParameter)
+        if (canResetParameter)
         {
             // モデル読み込み時のパラメータとの差分を出し、元に戻す
-            for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i) {
+            for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i)
+            {
                 csmFloat32 diff = _initParameterValues[i] - _model->GetParameterValue(i);
                 if (CubismMath::AbsF(diff) > 0.001f)
                 {
@@ -349,7 +352,8 @@ void LAppMinimumModel::Update()
     }
 
 
-    if (checkCanResetParameter) {
+    if (canResetParameter)
+    {
         //ドラッグによる変化
         //ドラッグによる顔の向きの調整
         _model->AddParameterValue(_idParamAngleX, _dragX * 30); // -30から30の値を加える
@@ -362,8 +366,10 @@ void LAppMinimumModel::Update()
         //ドラッグによる目の向きの調整
         _model->AddParameterValue(_idParamEyeBallX, _dragX); // -1から1の値を加える
         _model->AddParameterValue(_idParamEyeBallY, _dragY);
-    } else {
-        Csm::CubismVector2 vec = LAppMinimumDelegate::GetInstance()->GetViewPoint();
+    }
+    else
+    {
+        Csm::CubismVector2 vec = delegateInstance->GetViewPoint();
 
         //タップによる向きの調整
         //タップによる顔の向きの調整
@@ -405,7 +411,7 @@ void LAppMinimumModel::Update()
 
 CubismMotionQueueEntryHandle LAppMinimumModel::StartRandomMotion(const csmChar* group, csmInt32 priority, ACubismMotion::FinishedMotionCallback onFinishedMotionHandler)
 {
-    if (_modelJson->GetMotionCount(group) == 0)
+    if (!_modelJson->GetMotionCount(group))
     {
         return InvalidMotionQueueEntryHandleValue;
     }
@@ -491,7 +497,7 @@ csmBool LAppMinimumModel::HitTest(const csmChar* hitAreaName, csmFloat32 x, csmF
     const csmInt32 count = _modelJson->GetHitAreasCount();
     for (csmInt32 i = 0; i < count; i++)
     {
-        if (strcmp(_modelJson->GetHitAreaName(i), hitAreaName) == 0)
+        if (!strcmp(_modelJson->GetHitAreaName(i), hitAreaName))
         {
             const CubismIdHandle drawID = _modelJson->GetHitAreaId(i);
             return IsHit(drawID, x, y);
@@ -533,24 +539,15 @@ void LAppMinimumModel::SetExpression(const csmChar* expressionID)
 
 void LAppMinimumModel::SetRandomExpression()
 {
-    if (_expressions.GetSize() == 0)
+    if (!_expressions.GetSize())
     {
         return;
     }
 
     csmInt32 no = rand() % _expressions.GetSize();
-    csmMap<csmString, ACubismMotion*>::const_iterator map_ite;
-    csmInt32 i = 0;
-    for (map_ite = _expressions.Begin(); map_ite != _expressions.End(); map_ite++)
-    {
-        if (i == no)
-        {
-            csmString name = (*map_ite).First;
-            SetExpression(name.GetRawString());
-            return;
-        }
-        i++;
-    }
+    csmMap<csmString, ACubismMotion*>::const_iterator map_ite(&_expressions,no);
+    csmString name = (*map_ite).First;
+    SetExpression(name.GetRawString());
 }
 
 void LAppMinimumModel::ReloadRenderer()
