@@ -138,17 +138,17 @@ void LAppMinimumDelegate::OnSurfaceChanged(float width, float height)
 }
 
 LAppMinimumDelegate::LAppMinimumDelegate():
-        _cubismOption(),
-        _captured(false),
-        _mouseX(0.0f),
-        _mouseY(0.0f),
-        _isActive(true),
-        _width(0),
-        _height(0),
-        _viewPoint(0,0),
-        _tapped(false),
-        _isSecondCount(false),
-        _deltaTimeCount(0.0f)
+    _cubismOption(),
+    _captured(false),
+    _mouseX(0.0f),
+    _mouseY(0.0f),
+    _isActive(true),
+    _width(0),
+    _height(0),
+    _viewPoint(0,0),
+    _tapped(false),
+    _isSecondCount(false),
+    _deltaTimeCount(0.0f)
 {
     // Setup Cubism
     _cubismOption.LogFunction = LAppPal::PrintMessage;

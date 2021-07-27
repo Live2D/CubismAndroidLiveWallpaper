@@ -112,6 +112,9 @@ public:
     */
     GLuint CreateShader();
 
+    /**
+    * @brief パラメータを初期状態に戻すまでの時間をカウントする。
+    */
     void ParameterResetCount();
 
     /**
@@ -168,7 +171,7 @@ private:
     int _height;                                 ///< windowの高さ
     bool _captured;                              ///< クリックしているか
     bool _tapped;                                ///< タップ状態か
-    bool _isSecondCount;                           ///< 時間をカウントしているか
+    bool _isSecondCount;                         ///< 時間をカウントしているか
     bool _isActive;                              ///< アプリがアクティブ状態なのか
     float _mouseY;                               ///< マウスY座標
     float _mouseX;                               ///< マウスX座標
