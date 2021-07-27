@@ -6,6 +6,9 @@
 /Core/**/*.lib
 /Core/**/*.so
 
+# Sample third party files
+/Samples/**/thirdParty/*
+!/Samples/OpenGL/thirdParty/stb/*
 # build directories
 /AndroidWallPaper/build/
 # Other files
