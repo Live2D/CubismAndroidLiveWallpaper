@@ -168,9 +168,9 @@ void LAppMinimumDelegate::OnTouchBegan(double x, double y)
 
     if (_view)
     {
-        _tapped = true;
+        _isTapped = true;
         _isSecondCount = false;
-        _captured = true;
+        _isCaptured = true;
         _view->OnTouchesBegan(_mouseX, _mouseY);
     }
 }
@@ -182,10 +182,10 @@ void LAppMinimumDelegate::OnTouchEnded(double x, double y)
 
     if (_view)
     {
-        _tapped = false;
+        _isTapped = false;
         _isSecondCount = true;
         _deltaTimeCount = 0.0f;
-        _captured = false;
+        _isCaptured = false;
         _viewPoint = _view->OnTouchesEnded(_mouseX, _mouseY);
     }
 }
@@ -195,9 +195,9 @@ void LAppMinimumDelegate::OnTouchMoved(double x, double y)
     _mouseX = static_cast<float>(x);
     _mouseY = static_cast<float>(y);
 
-    if (_captured && _view)
+    if (_isCaptured && _view)
     {
-        _tapped = false;
+        _isTapped = false;
         _isSecondCount = false;
         _view->OnTouchesMoved(_mouseX, _mouseY);
     }
@@ -246,15 +246,18 @@ GLuint LAppMinimumDelegate::CreateShader()
     return programId;
 }
 
-void LAppMinimumDelegate::StartRandomMotion() {
+void LAppMinimumDelegate::StartRandomMotion()
+{
     LAppMinimumLive2DManager::GetInstance()->GetModel()->StartRandomMotion();
 }
 
-void LAppMinimumDelegate::StartMotion(Csm::csmInt32 index) {
+void LAppMinimumDelegate::StartMotion(Csm::csmInt32 index)
+{
     LAppMinimumLive2DManager::GetInstance()->GetModel()->StartOrderMotion(MotionGroupIdle,index,PriorityIdle);
 }
 
-void LAppMinimumDelegate::ParameterResetCount() {
+void LAppMinimumDelegate::ParameterResetCount()
+{
     if (_isSecondCount)
     {
         if (_deltaTimeCount > 1.0f)
