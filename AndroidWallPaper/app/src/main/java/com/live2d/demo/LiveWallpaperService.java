@@ -8,7 +8,10 @@
 package com.live2d.demo;
 
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ConfigurationInfo;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -23,6 +26,12 @@ public class LiveWallpaperService extends GLWallpaperService {
 
     public Engine onCreateEngine() {
         Live2DWallpaperEngine engine = new Live2DWallpaperEngine();
+
+        BroadcastReceiver br = new Live2DReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        this.registerReceiver(br,filter);
+
         return engine;
     }
 

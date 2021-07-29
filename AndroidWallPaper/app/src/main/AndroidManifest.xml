@@ -28,6 +28,11 @@
                 android:name="android.service.wallpaper"
                 android:resource="@xml/wallpaper" />
         </service>
+        <receiver android:name=".Live2DReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_ON"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
