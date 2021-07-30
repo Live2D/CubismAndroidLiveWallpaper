@@ -149,11 +149,15 @@ public:
      */
     void SetRenderTargetClearColor(float r, float g, float b);
 
+    void SetBackGroundSpriteColor(float r, float g, float b,float a);
+
 private:
     TouchManager* _touchManager;                 ///< タッチマネージャー
     Csm::CubismMatrix44* _deviceToScreen;    ///< デバイスからスクリーンへの行列
     Csm::CubismViewMatrix* _viewMatrix;      ///< viewMatrix
     GLuint _programId;                       ///< シェーダID
+
+    LAppSprite* _back;                       ///< 背景画像
 
     // レンダリング先を別ターゲットにする方式の場合に使用
     LAppSprite* _renderSprite;                                      ///< モードによっては_renderBufferのテクスチャを描画

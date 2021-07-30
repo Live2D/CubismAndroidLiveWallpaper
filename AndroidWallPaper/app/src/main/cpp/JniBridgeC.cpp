@@ -134,5 +134,16 @@ extern "C"
     {
         LAppMinimumDelegate::GetInstance()->StartMotion(index);
     }
-}
 
+    JNIEXPORT void JNICALL
+    Java_com_live2d_demo_JniBridgeJava_nativeSetClearColor(JNIEnv *env, jclass clazz, jfloat r, jfloat g, jfloat b)
+    {
+        LAppMinimumDelegate::GetInstance()->SetClearColor(r, g, b);
+    }
+
+    JNIEXPORT void JNICALL
+    Java_com_live2d_demo_JniBridgeJava_SetBackGroundSpriteAlpha(JNIEnv *env, jclass clazz, jfloat a)
+    {
+        LAppMinimumDelegate::GetInstance()->SetBackGroundSpriteAlpha(a);
+    }
+}

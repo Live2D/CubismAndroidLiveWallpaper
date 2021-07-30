@@ -44,6 +44,10 @@ public class JniBridgeJava {
 
     public static native void nativeStartMotion(int index);
 
+    public static native void nativeSetClearColor(float r, float g, float b);
+
+    public static native void SetBackGroundSpriteAlpha(float a);
+
     // Java -----------------------------------------------------------------
 
     public static void SetContext(Context context) {

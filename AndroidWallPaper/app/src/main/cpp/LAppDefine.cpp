@@ -31,7 +31,7 @@ namespace LAppDefine {
     const csmChar* ResourcesPath = "";
 
     // モデルの後ろにある背景の画像ファイル
-    const csmChar* BackImageName = "back_class_normal.png";
+    const csmChar* BackImageName = "back.png";
     // 歯車
     const csmChar* GearImageName = "icon_gear.png";
     // 終了ボタン
