@@ -337,7 +337,7 @@ void LAppMinimumModel::Update()
             _eyeBlink->UpdateParameters(_model, deltaTimeSeconds); // まばたき
         }
 
-        if (canResetParameter && (CubismMath::AbsF(_gravitationalAccelerationX) < 0.1f))
+        if (canResetParameter && (CubismMath::AbsF(_gravitationalAccelerationX) < 0.001f))
         {
             // モデル読み込み時のパラメータとの差分を出し、元に戻す
             for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i)
