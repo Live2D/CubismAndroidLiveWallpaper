@@ -394,14 +394,22 @@ void LAppMinimumModel::Update()
 
     // 重力加速度による向きの調整
     {
+        // 10倍した値を設定
+        csmFloat32 accelValue = _gravitationalAccelerationX * 10.0f;
+
         // 顔の向きの調整
-        _model->AddParameterValue(_idParamAngleX, _gravitationalAccelerationX * 10); // -10から10の値を加える
+        _model->AddParameterValue(_idParamAngleX, accelValue); // -10から10の値を加える
 
         // 体の向きの調整
-        _model->AddParameterValue(_idParamBodyAngleX, _gravitationalAccelerationX * 10); // -10から10の値を加える
+        _model->AddParameterValue(_idParamBodyAngleX, accelValue); // -10から10の値を加える
 
         // 目の向きの調整
         _model->AddParameterValue(_idParamEyeBallX, -_gravitationalAccelerationX); // -1から1の値を加える
+
+        // 範囲を超えないように設定
+        _gravitationalAccelerationX = CubismMath::RangeF(_gravitationalAccelerationX,-0.6f,0.6f);
+        //モデルの位置を設定
+        _modelMatrix->SetX(-_gravitationalAccelerationX / 2.0f);
     }
 
     _model->SaveParameters(); // 状態を保存
