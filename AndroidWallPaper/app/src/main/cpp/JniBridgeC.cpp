@@ -146,4 +146,10 @@ extern "C"
     {
         LAppMinimumDelegate::GetInstance()->SetBackGroundSpriteAlpha(a);
     }
+
+    JNIEXPORT void JNICALL
+    Java_com_live2d_demo_JniBridgeJava_SetGravitationalAccelerationX(JNIEnv *env, jclass clazz, jfloat gravity)
+    {
+        LAppMinimumDelegate::GetInstance()->SetGravitationalAccelerationX(gravity);
+    }
 }

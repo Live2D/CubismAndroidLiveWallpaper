@@ -135,4 +135,9 @@ void LAppMinimumLive2DManager::LoadModel(const std::string modelDirectoryName)
     static_cast<LAppMinimumModel*>(_model)->SetupModel();
 }
 
+void LAppMinimumLive2DManager::SetGravitationalAccelerationX(float gravity)
+{
+    _model->SetGravitationalAccelerationX(gravity);
+}
+
 

@@ -122,6 +122,13 @@ public:
     Csm::Rendering::CubismOffscreenFrame_OpenGLES2& GetRenderBuffer();
 
     /**
+    * @brief   X方向にかかる重力加速度をセット
+    *
+    * @param[in] gravity X方向の重力加速度
+    */
+    void SetGravitationalAccelerationX(Csm::csmFloat32 gravity);
+
+    /**
      * @brief    当たり判定テスト。<br>
      *            指定IDの頂点リストから矩形を計算し、座標が矩形範囲内か判定する。
      *
@@ -206,6 +213,8 @@ private:
     Csm::Rendering::CubismOffscreenFrame_OpenGLES2  _renderBuffer;   ///< フレームバッファ以外の描画先
 
     Csm::csmFloat32* _initParameterValues;                       ///< パラメータの初期値のリスト
+
+    Csm::csmFloat32 _gravitationalAccelerationX; ///< X方向にかかっている重力加速度
 };
 
 

@@ -133,6 +133,8 @@ public:
      */
     void SetBackGroundSpriteAlpha(float a);
 
+    void SetGravitationalAccelerationX(float gravity);
+
     /**
     * @brief テクスチャマネージャーの取得
     */

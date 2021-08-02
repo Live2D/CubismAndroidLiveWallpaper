@@ -72,6 +72,8 @@ public:
     */
     void OnUpdate() const;
 
+    void SetGravitationalAccelerationX(float gravity);
+
 private:
     /**
     * @brief  コンストラクタ

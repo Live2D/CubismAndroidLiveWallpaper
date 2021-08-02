@@ -7,7 +7,6 @@
 
 package com.live2d.demo;
 
-import android.app.Activity;
 import android.content.Context;
 
 import java.io.IOException;
@@ -47,6 +46,8 @@ public class JniBridgeJava {
     public static native void nativeSetClearColor(float r, float g, float b);
 
     public static native void SetBackGroundSpriteAlpha(float a);
+
+    public static native void SetGravitationalAccelerationX(float gravity);
 
     // Java -----------------------------------------------------------------
 

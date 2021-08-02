@@ -288,3 +288,8 @@ void LAppMinimumDelegate::SetBackGroundSpriteAlpha(float a)
         _view->SetBackGroundSpriteColor(1.0f,1.0f,1.0f,a);
     }
 }
+
+void LAppMinimumDelegate::SetGravitationalAccelerationX(float gravity)
+{
+    LAppMinimumLive2DManager::GetInstance()->SetGravitationalAccelerationX(gravity);
+}
