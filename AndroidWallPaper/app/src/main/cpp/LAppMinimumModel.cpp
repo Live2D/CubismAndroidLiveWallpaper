@@ -321,7 +321,7 @@ void LAppMinimumModel::Update()
     _model->SaveParameters(); // 状態を保存
     //-----------------------------------------------------------------
 
-    bool canResetParameter = (!delegateInstance->GetTapped() && !delegateInstance->GetIsSecondCount());
+    bool canResetParameter = (!delegateInstance->GetIsTapped() && !delegateInstance->GetIsSecondCount());
 
     // メインモーションの更新がないとき
     if (!motionUpdated)
@@ -598,7 +598,8 @@ Csm::Rendering::CubismOffscreenFrame_OpenGLES2 &LAppMinimumModel::GetRenderBuffe
     return _renderBuffer;
 }
 
-void LAppMinimumModel::StartRandomMotion() {
+void LAppMinimumModel::StartRandomMotion()
+{
     //-----------------------------------------------------------------
     _model->LoadParameters(); // 前回セーブされた状態をロード
     if (_motionManager->IsFinished())
@@ -610,7 +611,8 @@ void LAppMinimumModel::StartRandomMotion() {
     //-----------------------------------------------------------------
 }
 
-void LAppMinimumModel::StartRandomMotionWithOption(const Csm::csmChar* group, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler) {
+void LAppMinimumModel::StartRandomMotionWithOption(const Csm::csmChar* group, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler)
+{
     //-----------------------------------------------------------------
     _model->LoadParameters(); // 前回セーブされた状態をロード
     if (_motionManager->IsFinished())
@@ -622,7 +624,8 @@ void LAppMinimumModel::StartRandomMotionWithOption(const Csm::csmChar* group, Cs
     //-----------------------------------------------------------------
 }
 
-void LAppMinimumModel::StartOrderMotion(const Csm::csmChar* group,Csm::csmInt32 index, Csm::csmInt32 priority) {
+void LAppMinimumModel::StartOrderMotion(const Csm::csmChar* group,Csm::csmInt32 index, Csm::csmInt32 priority)
+{
     //-----------------------------------------------------------------
     _model->LoadParameters(); // 前回セーブされた状態をロード
     if (_motionManager->IsFinished())

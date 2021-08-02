@@ -145,7 +145,7 @@ public:
     /**
     * @brief   タップ状態かを取得する。
     */
-    bool GetTapped() { return _tapped; }
+    bool GetIsTapped() { return _isTapped; }
 
     /**
     * @brief   タップ状態から解放されたかどうかを取得する。
@@ -169,8 +169,8 @@ private:
     LAppMinimumView* _view;                             ///< View情報
     int _width;                                  ///< Windowの幅
     int _height;                                 ///< windowの高さ
-    bool _captured;                              ///< クリックしているか
-    bool _tapped;                                ///< タップ状態か
+    bool _isCaptured;                              ///< クリックしているか
+    bool _isTapped;                                ///< タップ状態か
     bool _isSecondCount;                         ///< 時間をカウントしているか
     bool _isActive;                              ///< アプリがアクティブ状態なのか
     float _mouseY;                               ///< マウスY座標

@@ -7,8 +7,7 @@
     <uses-feature android:glEsVersion="0x00020000" android:required="true" />
     <uses-feature android:name="android.software.live_wallpaper" android:required="true" />
 
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
 
     <application
         android:allowBackup="true"
@@ -29,6 +28,11 @@
                 android:name="android.service.wallpaper"
                 android:resource="@xml/wallpaper" />
         </service>
+        <receiver android:name=".Live2DReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_ON"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
