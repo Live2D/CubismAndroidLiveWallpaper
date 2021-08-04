@@ -29,6 +29,8 @@ using namespace LAppDefine;
 
 namespace {
     const csmFloat32 gravityMaxValue = 9.81f;
+    const csmFloat32 gravitationalAccelerationRange = 0.6f;
+    const csmFloat32 conditionStandardValue = 0.001f;
 
     csmByte* CreateBuffer(const csmChar* path, csmSizeInt* size)
     {
@@ -337,13 +339,13 @@ void LAppMinimumModel::Update()
             _eyeBlink->UpdateParameters(_model, deltaTimeSeconds); // まばたき
         }
 
-        if (canResetParameter && (CubismMath::AbsF(_gravitationalAccelerationX) < 0.001f))
+        if (canResetParameter && (CubismMath::AbsF(_gravitationalAccelerationX) < conditionStandardValue))
         {
             // モデル読み込み時のパラメータとの差分を出し、元に戻す
             for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i)
             {
                 csmFloat32 diff = _initParameterValues[i] - _model->GetParameterValue(i);
-                if (CubismMath::AbsF(diff) > 0.001f)
+                if (CubismMath::AbsF(diff) > conditionStandardValue)
                 {
                     _model->AddParameterValue(i,diff * deltaTimeSeconds * 10.0f);
                 } else{
@@ -407,7 +409,7 @@ void LAppMinimumModel::Update()
         _model->AddParameterValue(_idParamEyeBallX, -_gravitationalAccelerationX); // -1から1の値を加える
 
         // 範囲を超えないように設定
-        _gravitationalAccelerationX = CubismMath::RangeF(_gravitationalAccelerationX,-0.6f,0.6f);
+        _gravitationalAccelerationX = CubismMath::RangeF(_gravitationalAccelerationX,-gravitationalAccelerationRange,gravitationalAccelerationRange);
         //モデルの位置を設定
         _modelMatrix->SetX(-_gravitationalAccelerationX / 2.0f);
     }

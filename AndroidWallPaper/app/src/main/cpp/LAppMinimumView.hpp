@@ -149,7 +149,7 @@ public:
      */
     void SetRenderTargetClearColor(float r, float g, float b);
 
-    void SetBackGroundSpriteColor(float r, float g, float b,float a);
+    void SetBackGroundSpriteColor(float r, float g, float b, float a);
 
 private:
     TouchManager* _touchManager;                 ///< タッチマネージャー
