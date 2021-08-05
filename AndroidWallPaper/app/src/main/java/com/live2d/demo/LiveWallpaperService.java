@@ -32,8 +32,8 @@ public class LiveWallpaperService extends GLWallpaperService {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS); // Android API 31から非推奨
-        filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED);
-        filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
+        filter.addAction(Intent.ACTION_POWER_CONNECTED);
+        filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
         this.registerReceiver(br,filter);
 
         return engine;
