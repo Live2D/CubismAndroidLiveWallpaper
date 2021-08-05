@@ -28,6 +28,10 @@ using namespace Live2D::Cubism::Framework::DefaultParameterId;
 using namespace LAppDefine;
 
 namespace {
+    const csmFloat32 gravityMaxValue = 9.81f;
+    const csmFloat32 gravitationalAccelerationRange = 0.6f;
+    const csmFloat32 conditionStandardValue = 0.001f;
+
     csmByte* CreateBuffer(const csmChar* path, csmSizeInt* size)
     {
         if (DebugLogEnable)
@@ -51,6 +55,7 @@ LAppMinimumModel::LAppMinimumModel()
     : CubismUserModel()
     , _modelJson(nullptr)
     , _userTimeSeconds(0.0f)
+    , _gravitationalAccelerationX(0.0f)
 {
     if (DebugLogEnable)
     {
@@ -309,6 +314,9 @@ void LAppMinimumModel::Update()
     LAppMinimumDelegate* delegateInstance = LAppMinimumDelegate::GetInstance();
     delegateInstance->ParameterResetCount();
 
+    // -1~1の範囲になるよう正規化
+    _gravitationalAccelerationX = _gravitationalAccelerationX / gravityMaxValue;
+
     // モーションによるパラメータ更新の有無
     csmBool motionUpdated = false;
 
@@ -331,13 +339,13 @@ void LAppMinimumModel::Update()
             _eyeBlink->UpdateParameters(_model, deltaTimeSeconds); // まばたき
         }
 
-        if (canResetParameter)
+        if (canResetParameter && (CubismMath::AbsF(_gravitationalAccelerationX) < conditionStandardValue))
         {
             // モデル読み込み時のパラメータとの差分を出し、元に戻す
             for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i)
             {
                 csmFloat32 diff = _initParameterValues[i] - _model->GetParameterValue(i);
-                if (CubismMath::AbsF(diff) > 0.001f)
+                if (CubismMath::AbsF(diff) > conditionStandardValue)
                 {
                     _model->AddParameterValue(i,diff * deltaTimeSeconds * 10.0f);
                 } else{
@@ -384,6 +392,26 @@ void LAppMinimumModel::Update()
         //タップによる目の向きの調整
         _model->AddParameterValue(_idParamEyeBallX, vec.X); // -1から1の値を加える
         _model->AddParameterValue(_idParamEyeBallY, vec.Y);
+    }
+
+    // 重力加速度による向きの調整
+    {
+        // 10倍した値を設定
+        csmFloat32 accelValue = _gravitationalAccelerationX * 10.0f;
+
+        // 顔の向きの調整
+        _model->AddParameterValue(_idParamAngleX, accelValue); // -10から10の値を加える
+
+        // 体の向きの調整
+        _model->AddParameterValue(_idParamBodyAngleX, accelValue); // -10から10の値を加える
+
+        // 目の向きの調整
+        _model->AddParameterValue(_idParamEyeBallX, -_gravitationalAccelerationX); // -1から1の値を加える
+
+        // 範囲を超えないように設定
+        _gravitationalAccelerationX = CubismMath::RangeF(_gravitationalAccelerationX,-gravitationalAccelerationRange,gravitationalAccelerationRange);
+        //モデルの位置を設定
+        _modelMatrix->SetX(-_gravitationalAccelerationX / 2.0f);
     }
 
     _model->SaveParameters(); // 状態を保存
@@ -635,4 +663,9 @@ void LAppMinimumModel::StartOrderMotion(const Csm::csmChar* group,Csm::csmInt32 
     }
     _model->SaveParameters(); // 状態を保存
     //-----------------------------------------------------------------
+}
+
+void LAppMinimumModel::SetGravitationalAccelerationX(Csm::csmFloat32 gravity)
+{
+    _gravitationalAccelerationX = gravity;
 }

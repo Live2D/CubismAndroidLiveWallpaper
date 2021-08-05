@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ConfigurationInfo;
+import android.hardware.usb.UsbManager;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
@@ -30,6 +31,9 @@ public class LiveWallpaperService extends GLWallpaperService {
         BroadcastReceiver br = new Live2DReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS); // Android API 31から非推奨
+        filter.addAction(Intent.ACTION_POWER_CONNECTED);
+        filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
         this.registerReceiver(br,filter);
 
         return engine;

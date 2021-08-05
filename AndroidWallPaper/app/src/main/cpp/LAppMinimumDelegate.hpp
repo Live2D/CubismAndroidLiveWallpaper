@@ -118,6 +118,24 @@ public:
     void ParameterResetCount();
 
     /**
+     * @brief 背景クリア色設定
+     * @param[in]   r   赤(0.0~1.0)
+     * @param[in]   g   緑(0.0~1.0)
+     * @param[in]   b   青(0.0~1.0)
+     */
+    void SetClearColor(float r, float g, float b);
+
+    /**
+     * @brief 背景画像アルファ値
+     * @param[in]   r   赤(0.0~1.0)
+     * @param[in]   g   緑(0.0~1.0)
+     * @param[in]   b   青(0.0~1.0)
+     */
+    void SetBackGroundSpriteAlpha(float a);
+
+    void SetGravitationalAccelerationX(float gravity);
+
+    /**
     * @brief テクスチャマネージャーの取得
     */
     LAppTextureManager* GetTextureManager() { return _textureManager; }
@@ -166,11 +184,11 @@ private:
     LAppAllocator _cubismAllocator;              ///< Cubism SDK Allocator
     Csm::CubismFramework::Option _cubismOption;  ///< Cubism SDK Option
     LAppTextureManager* _textureManager;         ///< テクスチャマネージャー
-    LAppMinimumView* _view;                             ///< View情報
+    LAppMinimumView* _view;                      ///< View情報
     int _width;                                  ///< Windowの幅
     int _height;                                 ///< windowの高さ
-    bool _isCaptured;                              ///< クリックしているか
-    bool _isTapped;                                ///< タップ状態か
+    bool _isCaptured;                            ///< クリックしているか
+    bool _isTapped;                              ///< タップ状態か
     bool _isSecondCount;                         ///< 時間をカウントしているか
     bool _isActive;                              ///< アプリがアクティブ状態なのか
     float _mouseY;                               ///< マウスY座標
@@ -178,4 +196,6 @@ private:
 
     Csm::CubismVector2 _viewPoint;               ///< ビュー座標
     Csm::csmFloat32 _deltaTimeCount;             ///< 経過したデルタ時間
+
+    float _r,_g,_b;                              ///< カラー情報
 };

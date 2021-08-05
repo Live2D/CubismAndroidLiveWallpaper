@@ -29,7 +29,8 @@ using namespace Csm;
 LAppMinimumView::LAppMinimumView():
         _programId(0),
         _renderSprite(nullptr),
-        _renderTarget(SelectTarget_None)
+        _renderTarget(SelectTarget_None),
+        _backgroundImage(nullptr)
 {
     _clearColor[0] = 1.0f;
     _clearColor[1] = 1.0f;
@@ -54,6 +55,7 @@ LAppMinimumView::~LAppMinimumView()
     delete _viewMatrix;
     delete _deviceToScreen;
     delete _touchManager;
+    delete _backgroundImage;
 }
 
 void LAppMinimumView::Initialize()
@@ -107,9 +109,31 @@ void LAppMinimumView::InitializeSprite()
     int width = LAppMinimumDelegate::GetInstance()->GetWindowWidth();
     int height = LAppMinimumDelegate::GetInstance()->GetWindowHeight();
 
-    // 画面全体を覆うサイズ
+    LAppTextureManager* textureManager = LAppMinimumDelegate::GetInstance()->GetTextureManager();
+    const string resourcesPath = ResourcesPath;
+
+    string imageName = BackImageName;
+    LAppTextureManager::TextureInfo* backgroundTexture = textureManager->CreateTextureFromPngFile(resourcesPath + imageName);
+
     float x = width * 0.5f;
     float y = height * 0.5f;
+    float fWidth = width;
+    float fHeight = height;
+
+    if(_backgroundImage == NULL)
+    {
+        _backgroundImage = new LAppSprite(x, y, fWidth, fHeight, backgroundTexture->id, _programId);
+    }
+    else
+    {
+        _backgroundImage->ReSize(x, y, fWidth, fHeight);
+    }
+
+    _backgroundImage->SetColor(1.0f, 1.0f, 1.0f, 0.0f);
+
+    // 画面全体を覆うサイズ
+    x = width * 0.5f;
+    y = height * 0.5f;
 
     if (!_renderSprite)
     {
@@ -125,7 +149,7 @@ void LAppMinimumView::Render()
 {
     LAppMinimumLive2DManager* Live2DManager = LAppMinimumLive2DManager::GetInstance();
 
-    //Live2DManager->SetViewMatrix(_viewMatrix);
+    _backgroundImage->Render();
 
     // Cubism更新・描画
     Live2DManager->OnUpdate();
@@ -287,4 +311,12 @@ float LAppMinimumView::GetSpriteAlpha(int assign) const
     }
 
     return alpha;
+}
+
+void LAppMinimumView::SetBackGroundSpriteColor(float r, float g, float b, float a)
+{
+    if (_backgroundImage)
+    {
+        _backgroundImage->SetColor(r, g, b, a);
+    }
 }

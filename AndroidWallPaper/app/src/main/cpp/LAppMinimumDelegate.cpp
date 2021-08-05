@@ -88,7 +88,7 @@ void LAppMinimumDelegate::Run()
     LAppPal::UpdateTime();
 
     // 画面の初期化
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(_r, _g, _b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearDepthf(1.0f);
 
@@ -148,7 +148,10 @@ LAppMinimumDelegate::LAppMinimumDelegate():
     _viewPoint(0,0),
     _isTapped(false),
     _isSecondCount(false),
-    _deltaTimeCount(0.0f)
+    _deltaTimeCount(0.0f),
+    _r(0.0f),
+    _g(0.0f),
+    _b(0.0f)
 {
     // Setup Cubism
     _cubismOption.LogFunction = LAppPal::PrintMessage;
@@ -268,4 +271,25 @@ void LAppMinimumDelegate::ParameterResetCount()
 
         _deltaTimeCount += LAppPal::GetDeltaTime();
     }
+}
+
+void LAppMinimumDelegate::SetClearColor(float r, float g, float b)
+{
+    //カラー情報を設定
+    _r = r;
+    _g = g;
+    _b = b;
+}
+
+void LAppMinimumDelegate::SetBackGroundSpriteAlpha(float a)
+{
+    if (_view)
+    {
+        _view->SetBackGroundSpriteColor(1.0f,1.0f,1.0f,a);
+    }
+}
+
+void LAppMinimumDelegate::SetGravitationalAccelerationX(float gravity)
+{
+    LAppMinimumLive2DManager::GetInstance()->SetGravitationalAccelerationX(gravity);
 }
