@@ -30,7 +30,7 @@ LAppMinimumView::LAppMinimumView():
         _programId(0),
         _renderSprite(nullptr),
         _renderTarget(SelectTarget_None),
-        _backGroundImage(nullptr)
+        _backgroundImage(nullptr)
 {
     _clearColor[0] = 1.0f;
     _clearColor[1] = 1.0f;
@@ -55,7 +55,7 @@ LAppMinimumView::~LAppMinimumView()
     delete _viewMatrix;
     delete _deviceToScreen;
     delete _touchManager;
-    delete _backGroundImage;
+    delete _backgroundImage;
 }
 
 void LAppMinimumView::Initialize()
@@ -120,16 +120,16 @@ void LAppMinimumView::InitializeSprite()
     float fWidth = width;
     float fHeight = height;
 
-    if(_backGroundImage == NULL)
+    if(_backgroundImage == NULL)
     {
-        _backGroundImage = new LAppSprite(x, y, fWidth, fHeight, backgroundTexture->id, _programId);
+        _backgroundImage = new LAppSprite(x, y, fWidth, fHeight, backgroundTexture->id, _programId);
     }
     else
     {
-        _backGroundImage->ReSize(x, y, fWidth, fHeight);
+        _backgroundImage->ReSize(x, y, fWidth, fHeight);
     }
 
-    _backGroundImage->SetColor(1.0f, 1.0f, 1.0f, 0.0f);
+    _backgroundImage->SetColor(1.0f, 1.0f, 1.0f, 0.0f);
 
     // 画面全体を覆うサイズ
     x = width * 0.5f;
@@ -149,7 +149,7 @@ void LAppMinimumView::Render()
 {
     LAppMinimumLive2DManager* Live2DManager = LAppMinimumLive2DManager::GetInstance();
 
-    _backGroundImage->Render();
+    _backgroundImage->Render();
 
     // Cubism更新・描画
     Live2DManager->OnUpdate();
@@ -315,8 +315,8 @@ float LAppMinimumView::GetSpriteAlpha(int assign) const
 
 void LAppMinimumView::SetBackGroundSpriteColor(float r, float g, float b, float a)
 {
-    if (_backGroundImage)
+    if (_backgroundImage)
     {
-        _backGroundImage->SetColor(r, g, b, a);
+        _backgroundImage->SetColor(r, g, b, a);
     }
 }
