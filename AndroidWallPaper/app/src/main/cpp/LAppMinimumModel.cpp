@@ -473,7 +473,7 @@ CubismMotionQueueEntryHandle LAppMinimumModel::StartMotion(const csmChar* group,
 
     //ex) idle_0
     csmString name = Utils::CubismString::GetFormatedString("%s_%d", group, no);
-    CubismMotion* motion = static_cast<CubismMotion*>(_motions[name.GetRawString()]);
+    CubismMotion* motion;
     csmBool autoDelete = false;
 
     if (!motion)
@@ -481,10 +481,8 @@ CubismMotionQueueEntryHandle LAppMinimumModel::StartMotion(const csmChar* group,
         csmString path = fileName;
         path = csmString(_currentModelDirectory.c_str()) + path;
 
-        csmByte* buffer;
-        csmSizeInt size;
-        buffer = CreateBuffer(path.GetRawString(), &size);
-        motion = static_cast<CubismMotion*>(LoadMotion(buffer, size, nullptr, onFinishedMotionHandler));
+
+
         csmFloat32 fadeTime = _modelJson->GetMotionFadeInTimeValue(group, no);
         if (fadeTime >= 0.0f)
         {
@@ -498,7 +496,7 @@ CubismMotionQueueEntryHandle LAppMinimumModel::StartMotion(const csmChar* group,
         }
         autoDelete = true; // 終了時にメモリから削除
 
-        DeleteBuffer(buffer, path.GetRawString());
+
     }
     else
     {
