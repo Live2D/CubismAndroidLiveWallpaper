@@ -314,8 +314,8 @@ void LAppMinimumModel::Update()
     LAppMinimumDelegate* delegateInstance = LAppMinimumDelegate::GetInstance();
     delegateInstance->ParameterResetCount();
 
-    // -1~1の範囲になるよう正規化
-    _gravitationalAccelerationX = _gravitationalAccelerationX / gravityMaxValue;
+    // 重力加速度を-1~1の範囲になるよう正規化
+
 
     // モーションによるパラメータ更新の有無
     csmBool motionUpdated = false;
@@ -394,24 +394,24 @@ void LAppMinimumModel::Update()
         _model->AddParameterValue(_idParamEyeBallY, vec.Y);
     }
 
-    // 重力加速度による向きの調整
+    // 重力加速度による向きと位置の調整
     {
         // 10倍した値を設定
-        csmFloat32 accelValue = _gravitationalAccelerationX * 10.0f;
+
 
         // 顔の向きの調整
-        _model->AddParameterValue(_idParamAngleX, accelValue); // -10から10の値を加える
+        // -10から10の値を加える
 
         // 体の向きの調整
-        _model->AddParameterValue(_idParamBodyAngleX, accelValue); // -10から10の値を加える
+        // -10から10の値を加える
 
         // 目の向きの調整
-        _model->AddParameterValue(_idParamEyeBallX, -_gravitationalAccelerationX); // -1から1の値を加える
+        // -1から1の値を加える
 
         // 範囲を超えないように設定
-        _gravitationalAccelerationX = CubismMath::RangeF(_gravitationalAccelerationX,-gravitationalAccelerationRange,gravitationalAccelerationRange);
+
         //モデルの位置を設定
-        _modelMatrix->SetX(-_gravitationalAccelerationX / 2.0f);
+
     }
 
     _model->SaveParameters(); // 状態を保存
@@ -667,5 +667,5 @@ void LAppMinimumModel::StartOrderMotion(const Csm::csmChar* group,Csm::csmInt32 
 
 void LAppMinimumModel::SetGravitationalAccelerationX(Csm::csmFloat32 gravity)
 {
-    _gravitationalAccelerationX = gravity;
+
 }
