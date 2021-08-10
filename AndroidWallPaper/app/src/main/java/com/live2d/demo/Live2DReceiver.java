@@ -11,7 +11,7 @@ public class Live2DReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         switch (intent.getAction()) {
             case Intent.ACTION_SCREEN_ON:
-                JniBridgeJava.nativeRandomStartMotion();
+                JniBridgeJava.nativeStartRandomMotion();
                 break;
             // Android API 31から非推奨
             case Intent.ACTION_CLOSE_SYSTEM_DIALOGS:
