@@ -88,7 +88,7 @@ void LAppMinimumDelegate::Run()
     LAppPal::UpdateTime();
 
     // 画面の初期化
-    glClearColor(_r, _g, _b, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearDepthf(1.0f);
 
@@ -276,17 +276,12 @@ void LAppMinimumDelegate::ParameterResetCount()
 void LAppMinimumDelegate::SetClearColor(float r, float g, float b)
 {
     //カラー情報を設定
-    _r = r;
-    _g = g;
-    _b = b;
+
 }
 
 void LAppMinimumDelegate::SetBackGroundSpriteAlpha(float a)
 {
-    if (_view)
-    {
-        _view->SetBackGroundSpriteColor(1.0f,1.0f,1.0f,a);
-    }
+
 }
 
 void LAppMinimumDelegate::SetGravitationalAccelerationX(float gravity)

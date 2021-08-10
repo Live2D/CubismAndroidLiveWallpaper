@@ -315,8 +315,5 @@ float LAppMinimumView::GetSpriteAlpha(int assign) const
 
 void LAppMinimumView::SetBackGroundSpriteColor(float r, float g, float b, float a)
 {
-    if (_backgroundImage)
-    {
-        _backgroundImage->SetColor(r, g, b, a);
-    }
+
 }
