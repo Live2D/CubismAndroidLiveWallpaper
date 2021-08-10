@@ -374,7 +374,7 @@ void LAppMinimumModel::Update()
         _model->AddParameterValue(_idParamAngleZ, _dragX * _dragY * -30);
 
         //ドラッグによる体の向きの調整
-        _model->AddParameterValue(_idParamBodyAngleX, _dragX * 10); // -10から10の値を加える
+        _model->AddParameterValue(_idParamBodyAngleX, _dragX * calculationReferenceNumber); // -10から10の値を加える
 
         //ドラッグによる目の向きの調整
         _model->AddParameterValue(_idParamEyeBallX, _dragX); // -1から1の値を加える
@@ -391,7 +391,7 @@ void LAppMinimumModel::Update()
         _model->AddParameterValue(_idParamAngleZ, vec.X * vec.Y * -30);
 
         //タップによる体の向きの調整
-        _model->AddParameterValue(_idParamBodyAngleX, vec.X * 10); // -10から10の値を加える
+        _model->AddParameterValue(_idParamBodyAngleX, vec.X * calculationReferenceNumber); // -10から10の値を加える
 
         //タップによる目の向きの調整
         _model->AddParameterValue(_idParamEyeBallX, vec.X); // -1から1の値を加える
