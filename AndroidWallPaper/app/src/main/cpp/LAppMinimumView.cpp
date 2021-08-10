@@ -178,17 +178,12 @@ void LAppMinimumView::Render()
 
 void LAppMinimumView::OnTouchesBegan(float pointX, float pointY) const
 {
-    _touchManager->TouchesBegan(pointX, pointY);
+
 }
 
 void LAppMinimumView::OnTouchesMoved(float pointX, float pointY) const
 {
-    float viewX = this->TransformViewX(_touchManager->GetX());
-    float viewY = this->TransformViewY(_touchManager->GetY());
 
-    _touchManager->TouchesMoved(pointX, pointY);
-
-    LAppMinimumLive2DManager::GetInstance()->OnDrag(viewX, viewY);
 }
 
 Csm::CubismVector2 LAppMinimumView::OnTouchesEnded(float pointX, float pointY)
@@ -198,10 +193,10 @@ Csm::CubismVector2 LAppMinimumView::OnTouchesEnded(float pointX, float pointY)
     live2DManager->OnDrag(0.0f, 0.0f);
 
     // シングルタップ
-    float x = _deviceToScreen->TransformX(_touchManager->GetX()); // 論理座標変換した座標を取得。
-    float y = _deviceToScreen->TransformY(_touchManager->GetY()); // 論理座標変換した座標を取得。
+    float x=0.0f; // 論理座標変換した座標を取得。
+    float y=0.0f; // 論理座標変換した座標を取得。
 
-    live2DManager->OnTap(x, y);
+
 
     return {x,y};
 }
