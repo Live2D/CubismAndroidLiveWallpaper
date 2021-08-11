@@ -90,19 +90,19 @@ extern "C"
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnSurfaceCreated(JNIEnv *env, jclass type)
     {
-        LAppMinimumDelegate::GetInstance()->OnSurfaceCreate();
+
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnSurfaceChanged(JNIEnv *env, jclass type, jint width, jint height)
     {
-        LAppMinimumDelegate::GetInstance()->OnSurfaceChanged(width, height);
+
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnDrawFrame(JNIEnv *env, jclass type)
     {
-        LAppMinimumDelegate::GetInstance()->Run();
+
     }
 
     JNIEXPORT void JNICALL
