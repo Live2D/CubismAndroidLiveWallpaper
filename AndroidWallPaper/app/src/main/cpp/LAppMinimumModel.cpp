@@ -318,7 +318,7 @@ void LAppMinimumModel::Update()
     LAppMinimumDelegate* delegateInstance = LAppMinimumDelegate::GetInstance();
     delegateInstance->ParameterResetCount();
 
-    // -1~1の範囲になるよう正規化
+    // 重力加速度を-1~1の範囲になるよう正規化
     _gravitationalAccelerationX = _gravitationalAccelerationX / gravityMaxValue;
 
     // モーションによるパラメータ更新の有無
