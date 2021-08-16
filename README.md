@@ -37,11 +37,6 @@ Cubism Native Framework および Live2D Cubism Core と組み合わせて使用
 
 モデルを表示、操作するための各種機能を提供します。
 
-当リポジトリには Cubism Native Framework は同梱されていません。
-
-ダウンロードするには[こちら](https://www.live2d.com/download/cubism-sdk/download-native/)のページを参照ください。
-ダウンロードした Zip ファイルの中身を当リポジトリの `Framework` ディレクトリにコピーしてください。
-
 
 ## Live2D Cubism Core for Native
 
@@ -50,7 +45,7 @@ Cubism Native Frameworkを利用するために必要なライブラリです。
 当リポジトリには Live2D Cubism Core for Native は同梱されていません。
 
 ダウンロードするには[こちら](https://www.live2d.com/download/cubism-sdk/download-native/)のページを参照ください。
-ダウンロードした Zip ファイルの中身を当リポジトリの `Core` ディレクトリにコピーしてください。
+ダウンロードした Zip ファイルの該当する中身を `Core` ディレクトリにコピーしてください。
 
 
 ## SDKマニュアル
