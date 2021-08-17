@@ -124,7 +124,7 @@ extern "C"
     }
 
     JNIEXPORT void JNICALL
-    Java_com_live2d_demo_JniBridgeJava_nativeRandomStartMotion(JNIEnv *env, jclass type)
+    Java_com_live2d_demo_JniBridgeJava_nativeStartRandomMotion(JNIEnv *env, jclass type)
     {
         LAppMinimumDelegate::GetInstance()->StartRandomMotion();
     }

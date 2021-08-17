@@ -31,6 +31,7 @@ namespace {
     const csmFloat32 gravityMaxValue = 9.81f;
     const csmFloat32 gravitationalAccelerationRange = 0.6f;
     const csmFloat32 conditionStandardValue = 0.001f;
+    const csmFloat32 calculationReferenceNumber = 10.0f;
 
     csmByte* CreateBuffer(const csmChar* path, csmSizeInt* size)
     {
@@ -55,12 +56,13 @@ LAppMinimumModel::LAppMinimumModel()
     : CubismUserModel()
     , _modelJson(nullptr)
     , _userTimeSeconds(0.0f)
-    , _gravitationalAccelerationX(0.0f)
 {
     if (DebugLogEnable)
     {
         _debugMode = true;
     }
+
+    _gravitationalAccelerationX = conditionStandardValue / calculationReferenceNumber;
 
     _idParamAngleX = CubismFramework::GetIdManager()->GetId(ParamAngleX);
     _idParamAngleY = CubismFramework::GetIdManager()->GetId(ParamAngleY);
@@ -77,6 +79,8 @@ LAppMinimumModel::LAppMinimumModel(const std::string modelDirectoryName,const st
     {
         _debugMode = true;
     }
+
+    _gravitationalAccelerationX = conditionStandardValue / calculationReferenceNumber;
 
     _idParamAngleX = CubismFramework::GetIdManager()->GetId(ParamAngleX);
     _idParamAngleY = CubismFramework::GetIdManager()->GetId(ParamAngleY);
@@ -314,7 +318,7 @@ void LAppMinimumModel::Update()
     LAppMinimumDelegate* delegateInstance = LAppMinimumDelegate::GetInstance();
     delegateInstance->ParameterResetCount();
 
-    // -1~1の範囲になるよう正規化
+    // 重力加速度を-1~1の範囲になるよう正規化
     _gravitationalAccelerationX = _gravitationalAccelerationX / gravityMaxValue;
 
     // モーションによるパラメータ更新の有無
@@ -347,7 +351,7 @@ void LAppMinimumModel::Update()
                 csmFloat32 diff = _initParameterValues[i] - _model->GetParameterValue(i);
                 if (CubismMath::AbsF(diff) > conditionStandardValue)
                 {
-                    _model->AddParameterValue(i,diff * deltaTimeSeconds * 10.0f);
+                    _model->AddParameterValue(i,diff * deltaTimeSeconds * calculationReferenceNumber);
                 } else{
                     _model->SetParameterValue(i,_initParameterValues[i]);
                 }
@@ -370,7 +374,7 @@ void LAppMinimumModel::Update()
         _model->AddParameterValue(_idParamAngleZ, _dragX * _dragY * -30);
 
         //ドラッグによる体の向きの調整
-        _model->AddParameterValue(_idParamBodyAngleX, _dragX * 10); // -10から10の値を加える
+        _model->AddParameterValue(_idParamBodyAngleX, _dragX * calculationReferenceNumber); // -10から10の値を加える
 
         //ドラッグによる目の向きの調整
         _model->AddParameterValue(_idParamEyeBallX, _dragX); // -1から1の値を加える
@@ -387,7 +391,7 @@ void LAppMinimumModel::Update()
         _model->AddParameterValue(_idParamAngleZ, vec.X * vec.Y * -30);
 
         //タップによる体の向きの調整
-        _model->AddParameterValue(_idParamBodyAngleX, vec.X * 10); // -10から10の値を加える
+        _model->AddParameterValue(_idParamBodyAngleX, vec.X * calculationReferenceNumber); // -10から10の値を加える
 
         //タップによる目の向きの調整
         _model->AddParameterValue(_idParamEyeBallX, vec.X); // -1から1の値を加える
@@ -397,7 +401,7 @@ void LAppMinimumModel::Update()
     // 重力加速度による向きの調整
     {
         // 10倍した値を設定
-        csmFloat32 accelValue = _gravitationalAccelerationX * 10.0f;
+        csmFloat32 accelValue = _gravitationalAccelerationX * calculationReferenceNumber;
 
         // 顔の向きの調整
         _model->AddParameterValue(_idParamAngleX, accelValue); // -10から10の値を加える
