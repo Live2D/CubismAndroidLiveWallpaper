@@ -12,14 +12,14 @@
 #include <Type/csmVector.hpp>
 #include <string>
 
-class LAppMinimumModel;
+class LWallpaperModel;
 
 /**
 * @brief サンプルアプリケーションにおいてCubismModelを管理するクラス<br>
 *         モデル生成と破棄、タップイベントの処理、モデル切り替えを行う。
 *
 */
-class LAppMinimumLive2DManager
+class LWallpaperLive2DManager
 {
 
 public:
@@ -29,7 +29,7 @@ public:
     *
     * @return  クラスのインスタンス
     */
-    static LAppMinimumLive2DManager* GetInstance();
+    static LWallpaperLive2DManager* GetInstance();
 
     /**
     * @brief   クラスのインスタンス（シングルトン）を解放する。
@@ -42,7 +42,7 @@ public:
     *
     * @return      モデルのインスタンスを返す。
     */
-    LAppMinimumModel* GetModel() const;
+    LWallpaperModel* GetModel() const;
 
     /**
     * @brief   現在のシーンで保持しているすべてのモデルを解放する
@@ -78,12 +78,12 @@ private:
     /**
     * @brief  コンストラクタ
     */
-    LAppMinimumLive2DManager();
+    LWallpaperLive2DManager();
 
     /**
     * @brief  デストラクタ
     */
-    virtual ~LAppMinimumLive2DManager();
+    virtual ~LWallpaperLive2DManager();
 
     /**
     * @brief ディレクトリパスの設定
@@ -102,7 +102,7 @@ private:
     void LoadModel(const std::string modelDirectoryName);
 
     Csm::CubismMatrix44*        _viewMatrix; ///< モデル描画に用いるView行列
-    LAppMinimumModel*  _model; ///< モデルインスタンス
+    LWallpaperModel*  _model; ///< モデルインスタンス
 
     /**
     *@brief モデルデータのディレクトリ名

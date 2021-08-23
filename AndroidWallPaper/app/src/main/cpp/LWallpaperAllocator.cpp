@@ -5,21 +5,21 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
-#include "LAppAllocator.hpp"
+#include "LWallpaperAllocator.hpp"
 
 using namespace Csm;
 
-void* LAppAllocator::Allocate(const csmSizeType  size)
+void* LWallpaperAllocator::Allocate(const csmSizeType  size)
 {
     return malloc(size);
 }
 
-void LAppAllocator::Deallocate(void* memory)
+void LWallpaperAllocator::Deallocate(void* memory)
 {
     free(memory);
 }
 
-void* LAppAllocator::AllocateAligned(const csmSizeType size, const csmUint32 alignment)
+void* LWallpaperAllocator::AllocateAligned(const csmSizeType size, const csmUint32 alignment)
 {
     size_t offset, shift, alignedAddress;
     void* allocation;
@@ -44,7 +44,7 @@ void* LAppAllocator::AllocateAligned(const csmSizeType size, const csmUint32 ali
     return reinterpret_cast<void*>(alignedAddress);
 }
 
-void LAppAllocator::DeallocateAligned(void* alignedMemory)
+void LWallpaperAllocator::DeallocateAligned(void* alignedMemory)
 {
     void** preamble;
 

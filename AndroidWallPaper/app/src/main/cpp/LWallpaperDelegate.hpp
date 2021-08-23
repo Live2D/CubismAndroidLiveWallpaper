@@ -9,17 +9,17 @@
 
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
-#include "LAppAllocator.hpp"
+#include "LWallpaperAllocator.hpp"
 #include "Math/CubismVector2.hpp"
 
-class LAppMinimumView;
-class LAppTextureManager;
+class LWallpaperView;
+class LWallpaperTextureManager;
 
 /**
 * @brief   アプリケーションクラス。
 *   Cubism SDK の管理を行う。
 */
-class LAppMinimumDelegate
+class LWallpaperDelegate
 {
 public:
     /**
@@ -28,7 +28,7 @@ public:
     *
     * @return  クラスのインスタンス
     */
-    static LAppMinimumDelegate* GetInstance();
+    static LWallpaperDelegate* GetInstance();
 
     /**
     * @brief   クラスのインスタンス（シングルトン）を解放する。
@@ -138,7 +138,7 @@ public:
     /**
     * @brief テクスチャマネージャーの取得
     */
-    LAppTextureManager* GetTextureManager() { return _textureManager; }
+    LWallpaperTextureManager* GetTextureManager() { return _textureManager; }
 
     /**
     * @brief ウインドウ幅の設定
@@ -153,7 +153,7 @@ public:
     /**
     * @brief   View情報を取得する。
     */
-    LAppMinimumView* GetView() { return _view; }
+    LWallpaperView* GetView() { return _view; }
 
     /**
     * @brief   View座標を取得する。
@@ -174,17 +174,17 @@ private:
     /**
     * @brief   コンストラクタ
     */
-    LAppMinimumDelegate();
+    LWallpaperDelegate();
 
     /**
     * @brief   デストラクタ
     */
-    ~LAppMinimumDelegate();
+    ~LWallpaperDelegate();
 
-    LAppAllocator _cubismAllocator;              ///< Cubism SDK Allocator
+    LWallpaperAllocator _cubismAllocator;              ///< Cubism SDK Allocator
     Csm::CubismFramework::Option _cubismOption;  ///< Cubism SDK Option
-    LAppTextureManager* _textureManager;         ///< テクスチャマネージャー
-    LAppMinimumView* _view;                      ///< View情報
+    LWallpaperTextureManager* _textureManager;         ///< テクスチャマネージャー
+    LWallpaperView* _view;                      ///< View情報
     int _width;                                  ///< Windowの幅
     int _height;                                 ///< windowの高さ
     bool _isCaptured;                            ///< クリックしているか

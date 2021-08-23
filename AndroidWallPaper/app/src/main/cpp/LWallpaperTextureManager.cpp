@@ -5,24 +5,24 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
-#include "LAppTextureManager.hpp"
+#include "LWallpaperTextureManager.hpp"
 #include <iostream>
 #define STBI_NO_STDIO
 #define STBI_ONLY_PNG
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include "LAppPal.hpp"
+#include "LWallpaperPal.hpp"
 
-LAppTextureManager::LAppTextureManager()
+LWallpaperTextureManager::LWallpaperTextureManager()
 {
 }
 
-LAppTextureManager::~LAppTextureManager()
+LWallpaperTextureManager::~LWallpaperTextureManager()
 {
     ReleaseTextures();
 }
 
-LAppTextureManager::TextureInfo* LAppTextureManager::CreateTextureFromPngFile(std::string fileName)
+LWallpaperTextureManager::TextureInfo* LWallpaperTextureManager::CreateTextureFromPngFile(std::string fileName)
 {
     //search loaded texture already.
     for (Csm::csmUint32 i = 0; i < _textures.GetSize(); i++)
@@ -39,7 +39,7 @@ LAppTextureManager::TextureInfo* LAppTextureManager::CreateTextureFromPngFile(st
     unsigned char* png;
     unsigned char* address;
 
-    address = LAppPal::LoadFileAsBytes(fileName, &size);
+    address = LWallpaperPal::LoadFileAsBytes(fileName, &size);
 
     // png情報を取得する
     png = stbi_load_from_memory(
@@ -71,9 +71,9 @@ LAppTextureManager::TextureInfo* LAppTextureManager::CreateTextureFromPngFile(st
 
     // 解放処理
     stbi_image_free(png);
-    LAppPal::ReleaseBytes(address);
+    LWallpaperPal::ReleaseBytes(address);
 
-    LAppTextureManager::TextureInfo* textureInfo = new LAppTextureManager::TextureInfo();
+    LWallpaperTextureManager::TextureInfo* textureInfo = new LWallpaperTextureManager::TextureInfo();
     if (textureInfo != NULL)
     {
         textureInfo->fileName = fileName;
@@ -88,7 +88,7 @@ LAppTextureManager::TextureInfo* LAppTextureManager::CreateTextureFromPngFile(st
 
 }
 
-void LAppTextureManager::ReleaseTextures()
+void LWallpaperTextureManager::ReleaseTextures()
 {
     for (Csm::csmUint32 i = 0; i < _textures.GetSize(); i++)
     {
@@ -98,7 +98,7 @@ void LAppTextureManager::ReleaseTextures()
     _textures.Clear();
 }
 
-void LAppTextureManager::ReleaseTexture(Csm::csmUint32 textureId)
+void LWallpaperTextureManager::ReleaseTexture(Csm::csmUint32 textureId)
 {
     for (Csm::csmUint32 i = 0; i < _textures.GetSize(); i++)
     {
@@ -112,7 +112,7 @@ void LAppTextureManager::ReleaseTexture(Csm::csmUint32 textureId)
     }
 }
 
-void LAppTextureManager::ReleaseTexture(std::string fileName)
+void LWallpaperTextureManager::ReleaseTexture(std::string fileName)
 {
     for (Csm::csmUint32 i = 0; i < _textures.GetSize(); i++)
     {

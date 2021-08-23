@@ -7,8 +7,8 @@
 
 #include <jni.h>
 #include "JniBridgeC.hpp"
-#include "LAppMinimumDelegate.hpp"
-#include "LAppPal.hpp"
+#include "LWallpaperDelegate.hpp"
+#include "LWallpaperPal.hpp"
 
 using namespace Csm;
 
@@ -66,90 +66,90 @@ extern "C"
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnStart(JNIEnv *env, jclass type)
     {
-        LAppMinimumDelegate::GetInstance()->OnStart();
+        LWallpaperDelegate::GetInstance()->OnStart();
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnPause(JNIEnv *env, jclass type)
     {
-        LAppMinimumDelegate::GetInstance()->OnPause();
+        LWallpaperDelegate::GetInstance()->OnPause();
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnStop(JNIEnv *env, jclass type)
     {
-        LAppMinimumDelegate::GetInstance()->OnStop();
+        LWallpaperDelegate::GetInstance()->OnStop();
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnDestroy(JNIEnv *env, jclass type)
     {
-        LAppMinimumDelegate::GetInstance()->OnDestroy();
+        LWallpaperDelegate::GetInstance()->OnDestroy();
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnSurfaceCreated(JNIEnv *env, jclass type)
     {
-        LAppMinimumDelegate::GetInstance()->OnSurfaceCreate();
+        LWallpaperDelegate::GetInstance()->OnSurfaceCreate();
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnSurfaceChanged(JNIEnv *env, jclass type, jint width, jint height)
     {
-        LAppMinimumDelegate::GetInstance()->OnSurfaceChanged(width, height);
+        LWallpaperDelegate::GetInstance()->OnSurfaceChanged(width, height);
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnDrawFrame(JNIEnv *env, jclass type)
     {
-        LAppMinimumDelegate::GetInstance()->Run();
+        LWallpaperDelegate::GetInstance()->Run();
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnTouchesBegan(JNIEnv *env, jclass type, jfloat pointX, jfloat pointY)
     {
-        LAppMinimumDelegate::GetInstance()->OnTouchBegan(pointX, pointY);
+        LWallpaperDelegate::GetInstance()->OnTouchBegan(pointX, pointY);
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnTouchesEnded(JNIEnv *env, jclass type, jfloat pointX, jfloat pointY)
     {
-        LAppMinimumDelegate::GetInstance()->OnTouchEnded(pointX, pointY);
+        LWallpaperDelegate::GetInstance()->OnTouchEnded(pointX, pointY);
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnTouchesMoved(JNIEnv *env, jclass type, jfloat pointX, jfloat pointY)
     {
-        LAppMinimumDelegate::GetInstance()->OnTouchMoved(pointX, pointY);
+        LWallpaperDelegate::GetInstance()->OnTouchMoved(pointX, pointY);
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeStartRandomMotion(JNIEnv *env, jclass type)
     {
-        LAppMinimumDelegate::GetInstance()->StartRandomMotion();
+        LWallpaperDelegate::GetInstance()->StartRandomMotion();
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeStartMotion(JNIEnv *env, jclass type, jint index)
     {
-        LAppMinimumDelegate::GetInstance()->StartMotion(index);
+        LWallpaperDelegate::GetInstance()->StartMotion(index);
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeSetClearColor(JNIEnv *env, jclass clazz, jfloat r, jfloat g, jfloat b)
     {
-        LAppMinimumDelegate::GetInstance()->SetClearColor(r, g, b);
+        LWallpaperDelegate::GetInstance()->SetClearColor(r, g, b);
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_SetBackGroundSpriteAlpha(JNIEnv *env, jclass clazz, jfloat a)
     {
-        LAppMinimumDelegate::GetInstance()->SetBackGroundSpriteAlpha(a);
+        LWallpaperDelegate::GetInstance()->SetBackGroundSpriteAlpha(a);
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_SetGravitationalAccelerationX(JNIEnv *env, jclass clazz, jfloat gravity)
     {
-        LAppMinimumDelegate::GetInstance()->SetGravitationalAccelerationX(gravity);
+        LWallpaperDelegate::GetInstance()->SetGravitationalAccelerationX(gravity);
     }
 }
