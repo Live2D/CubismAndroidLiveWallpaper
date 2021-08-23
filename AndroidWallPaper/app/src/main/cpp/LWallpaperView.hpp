@@ -16,13 +16,13 @@
 #include <Math/CubismVector2.hpp>
 
 class TouchManager;
-class LAppSprite;
-class LAppMinimumModel;
+class LWallpaperSprite;
+class LWallpaperModel;
 
 /**
 * @brief 描画クラス
 */
-class LAppMinimumView
+class LWallpaperView
 {
 public:
 
@@ -39,12 +39,12 @@ public:
     /**
     * @brief コンストラクタ
     */
-    LAppMinimumView();
+    LWallpaperView();
 
     /**
     * @brief デストラクタ
     */
-    ~LAppMinimumView();
+    ~LWallpaperView();
 
     /**
     * @brief 初期化する。
@@ -123,12 +123,12 @@ public:
     /**
      * @brief   モデル1体を描画する直前にコールされる
      */
-    void PreModelDraw(LAppMinimumModel &refModel);
+    void PreModelDraw(LWallpaperModel &refModel);
 
     /**
      * @brief   モデル1体を描画した直後にコールされる
      */
-    void PostModelDraw(LAppMinimumModel &refModel);
+    void PostModelDraw(LWallpaperModel &refModel);
 
     /**
      * @brief   別レンダリングターゲットにモデルを描画するサンプルで
@@ -157,10 +157,10 @@ private:
     Csm::CubismViewMatrix* _viewMatrix;      ///< viewMatrix
     GLuint _programId;                       ///< シェーダID
 
-    LAppSprite* _backgroundImage;                       ///< 背景画像
+    LWallpaperSprite* _backgroundImage;                       ///< 背景画像
 
     // レンダリング先を別ターゲットにする方式の場合に使用
-    LAppSprite* _renderSprite;                                      ///< モードによっては_renderBufferのテクスチャを描画
+    LWallpaperSprite* _renderSprite;                                      ///< モードによっては_renderBufferのテクスチャを描画
     Csm::Rendering::CubismOffscreenFrame_OpenGLES2 _renderBuffer;   ///< モードによってはCubismモデル結果をこっちにレンダリング
     SelectTarget _renderTarget;     ///< レンダリング先の選択肢
     float _clearColor[4];           ///< レンダリングターゲットのクリアカラー

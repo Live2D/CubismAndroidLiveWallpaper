@@ -5,35 +5,35 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
-#include "LAppMinimumLive2DManager.hpp"
+#include "LWallpaperLive2DManager.hpp"
 #include <string>
 #include <GLES2/gl2.h>
 #include <Rendering/CubismRenderer.hpp>
-#include "LAppPal.hpp"
-#include "LAppDefine.hpp"
-#include "LAppMinimumDelegate.hpp"
-#include "LAppMinimumModel.hpp"
-#include "LAppMinimumView.hpp"
+#include "LWallpaperPal.hpp"
+#include "LWallpaperDefine.hpp"
+#include "LWallpaperDelegate.hpp"
+#include "LWallpaperModel.hpp"
+#include "LWallpaperView.hpp"
 
 using namespace Csm;
 using namespace LAppDefine;
 using namespace std;
 
 namespace {
-    LAppMinimumLive2DManager* s_instance = nullptr;
+    LWallpaperLive2DManager* s_instance = nullptr;
 }
 
-LAppMinimumLive2DManager* LAppMinimumLive2DManager::GetInstance()
+LWallpaperLive2DManager* LWallpaperLive2DManager::GetInstance()
 {
     if (!s_instance)
     {
-        s_instance = new LAppMinimumLive2DManager();
+        s_instance = new LWallpaperLive2DManager();
     }
 
     return s_instance;
 }
 
-void LAppMinimumLive2DManager::ReleaseInstance()
+void LWallpaperLive2DManager::ReleaseInstance()
 {
     if (s_instance)
     {
@@ -43,34 +43,34 @@ void LAppMinimumLive2DManager::ReleaseInstance()
     s_instance = nullptr;
 }
 
-LAppMinimumLive2DManager::LAppMinimumLive2DManager()
+LWallpaperLive2DManager::LWallpaperLive2DManager()
 {
     _viewMatrix = new CubismMatrix44();
     LoadModel(_modelDirectoryName);
 }
 
-LAppMinimumLive2DManager::~LAppMinimumLive2DManager()
+LWallpaperLive2DManager::~LWallpaperLive2DManager()
 {
     ReleaseModel();
 }
 
-void LAppMinimumLive2DManager::ReleaseModel()
+void LWallpaperLive2DManager::ReleaseModel()
 {
     delete _model;
 }
 
-LAppMinimumModel* LAppMinimumLive2DManager::GetModel() const
+LWallpaperModel* LWallpaperLive2DManager::GetModel() const
 {
     return _model;
 }
 
-void LAppMinimumLive2DManager::OnDrag(csmFloat32 x, csmFloat32 y) const
+void LWallpaperLive2DManager::OnDrag(csmFloat32 x, csmFloat32 y) const
 {
-    LAppMinimumModel* model = GetModel();
+    LWallpaperModel* model = GetModel();
     model->SetDragging(x, y);
 }
 
-void LAppMinimumLive2DManager::OnTap(csmFloat32 x, csmFloat32 y)
+void LWallpaperLive2DManager::OnTap(csmFloat32 x, csmFloat32 y)
 {
     if (_model->HitTest(HitAreaNameHead, x, y))
     {
@@ -82,14 +82,14 @@ void LAppMinimumLive2DManager::OnTap(csmFloat32 x, csmFloat32 y)
     }
 }
 
-void LAppMinimumLive2DManager::OnUpdate() const
+void LWallpaperLive2DManager::OnUpdate() const
 {
-    int width = LAppMinimumDelegate::GetInstance()->GetWindowWidth();
-    int height = LAppMinimumDelegate::GetInstance()->GetWindowHeight();
+    int width = LWallpaperDelegate::GetInstance()->GetWindowWidth();
+    int height = LWallpaperDelegate::GetInstance()->GetWindowHeight();
 
     CubismMatrix44 projection;
 
-    LAppMinimumModel* model = GetModel();
+    LWallpaperModel* model = GetModel();
 
     if (model->GetModel()->GetCanvasWidth() > 1.0f && width < height)
     {
@@ -109,33 +109,33 @@ void LAppMinimumLive2DManager::OnUpdate() const
     }
 
     // モデル1体描画前コール
-    LAppMinimumDelegate::GetInstance()->GetView()->PreModelDraw(*model);
+    LWallpaperDelegate::GetInstance()->GetView()->PreModelDraw(*model);
 
     model->Update();
     model->Draw(projection);///< 参照渡しなのでprojectionは変質する
 
     // モデル1体描画前コール
-    LAppMinimumDelegate::GetInstance()->GetView()->PostModelDraw(*model);
+    LWallpaperDelegate::GetInstance()->GetView()->PostModelDraw(*model);
 }
 
-void LAppMinimumLive2DManager::SetAssetDirectory(const std::string &path)
+void LWallpaperLive2DManager::SetAssetDirectory(const std::string &path)
 {
     _currentModelDirectory = path;
 }
 
-void LAppMinimumLive2DManager::LoadModel(const std::string modelDirectoryName)
+void LWallpaperLive2DManager::LoadModel(const std::string modelDirectoryName)
 {
     // モデルのディレクトリを指定
     SetAssetDirectory(LAppDefine::ResourcesPath + modelDirectoryName + "/");
 
     // モデルデータの新規生成
-    _model = new LAppMinimumModel(modelDirectoryName, _currentModelDirectory);
+    _model = new LWallpaperModel(modelDirectoryName, _currentModelDirectory);
 
     // モデルデータの読み込み及び生成とセットアップを行う
-    static_cast<LAppMinimumModel*>(_model)->SetupModel();
+    static_cast<LWallpaperModel*>(_model)->SetupModel();
 }
 
-void LAppMinimumLive2DManager::SetGravitationalAccelerationX(float gravity)
+void LWallpaperLive2DManager::SetGravitationalAccelerationX(float gravity)
 {
     _model->SetGravitationalAccelerationX(gravity);
 }

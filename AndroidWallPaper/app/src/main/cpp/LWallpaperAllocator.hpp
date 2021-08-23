@@ -17,7 +17,7 @@
 * フレームワークから呼び出される。
 *
 */
-class LAppAllocator : public Csm::ICubismAllocator
+class LWallpaperAllocator : public Csm::ICubismAllocator
 {
     /**
     * @brief  メモリ領域を割り当てる。

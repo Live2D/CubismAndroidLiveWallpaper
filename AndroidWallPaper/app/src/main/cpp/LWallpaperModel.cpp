@@ -5,7 +5,7 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
-#include "LAppMinimumModel.hpp"
+#include "LWallpaperModel.hpp"
 #include <fstream>
 #include <vector>
 #include <Live2DCubismCore.hpp>
@@ -18,10 +18,10 @@
 #include <Id/CubismIdManager.hpp>
 #include <Motion/CubismMotionQueueEntry.hpp>
 #include <Math/CubismMath.hpp>
-#include "LAppDefine.hpp"
-#include "LAppPal.hpp"
-#include "LAppTextureManager.hpp"
-#include "LAppMinimumDelegate.hpp"
+#include "LWallpaperDefine.hpp"
+#include "LWallpaperPal.hpp"
+#include "LWallpaperTextureManager.hpp"
+#include "LWallpaperDelegate.hpp"
 
 using namespace Live2D::Cubism::Framework;
 using namespace Live2D::Cubism::Framework::DefaultParameterId;
@@ -37,22 +37,22 @@ namespace {
     {
         if (DebugLogEnable)
         {
-            LAppPal::PrintLog("[APP]create buffer: %s ", path);
+            LWallpaperPal::PrintLog("[APP]create buffer: %s ", path);
         }
-        return LAppPal::LoadFileAsBytes(path, size);
+        return LWallpaperPal::LoadFileAsBytes(path, size);
     }
 
     void DeleteBuffer(csmByte* buffer, const csmChar* path = "")
     {
         if (DebugLogEnable)
         {
-            LAppPal::PrintLog("[APP]delete buffer: %s", path);
+            LWallpaperPal::PrintLog("[APP]delete buffer: %s", path);
         }
-        LAppPal::ReleaseBytes(buffer);
+        LWallpaperPal::ReleaseBytes(buffer);
     }
 }
 
-LAppMinimumModel::LAppMinimumModel()
+LWallpaperModel::LWallpaperModel()
     : CubismUserModel()
     , _modelJson(nullptr)
     , _userTimeSeconds(0.0f)
@@ -72,7 +72,7 @@ LAppMinimumModel::LAppMinimumModel()
     _idParamEyeBallY = CubismFramework::GetIdManager()->GetId(ParamEyeBallY);
 }
 
-LAppMinimumModel::LAppMinimumModel(const std::string modelDirectoryName,const std::string currentModelDirectory)
+LWallpaperModel::LWallpaperModel(const std::string modelDirectoryName, const std::string currentModelDirectory)
         : CubismUserModel(),_modelDirName(modelDirectoryName), _currentModelDirectory(currentModelDirectory), _modelJson(nullptr), _userTimeSeconds(0.0f)
 {
     if (DebugLogEnable)
@@ -90,7 +90,7 @@ LAppMinimumModel::LAppMinimumModel(const std::string modelDirectoryName,const st
     _idParamEyeBallY = CubismFramework::GetIdManager()->GetId(ParamEyeBallY);
 }
 
-LAppMinimumModel::~LAppMinimumModel()
+LWallpaperModel::~LWallpaperModel()
 {
     ReleaseMotions();
     ReleaseExpressions();
@@ -103,12 +103,12 @@ LAppMinimumModel::~LAppMinimumModel()
     delete _modelJson;
 }
 
-std::string LAppMinimumModel::MakeAssetPath(const std::string &assetFileName)
+std::string LWallpaperModel::MakeAssetPath(const std::string &assetFileName)
 {
     return _currentModelDirectory + assetFileName;
 }
 
-void LAppMinimumModel::LoadAssets(const std::string & fiileName, const std::function<void(Csm::csmByte*, Csm::csmSizeInt)>& afterLoadCallback)
+void LWallpaperModel::LoadAssets(const std::string & fiileName, const std::function<void(Csm::csmByte*, Csm::csmSizeInt)>& afterLoadCallback)
 {
     Csm::csmSizeInt bufferSize = 0;
     Csm::csmByte* buffer = nullptr;
@@ -119,17 +119,17 @@ void LAppMinimumModel::LoadAssets(const std::string & fiileName, const std::func
     }
 
     // バッファの設定
-    buffer = LAppPal::LoadFileAsBytes(MakeAssetPath(fiileName).c_str(), &bufferSize);
+    buffer = LWallpaperPal::LoadFileAsBytes(MakeAssetPath(fiileName).c_str(), &bufferSize);
 
     // コールバック関数の呼び出し
     afterLoadCallback(buffer, bufferSize);
 
     // バッファの解放
-    LAppPal::ReleaseBytes(buffer);
+    LWallpaperPal::ReleaseBytes(buffer);
 }
 
 
-void LAppMinimumModel::SetupModel()
+void LWallpaperModel::SetupModel()
 {
     _updating = true;
     _initialized = false;
@@ -215,7 +215,7 @@ void LAppMinimumModel::SetupModel()
     _initialized = true;
 }
 
-void LAppMinimumModel::PreloadMotionGroup(const csmChar* group)
+void LWallpaperModel::PreloadMotionGroup(const csmChar* group)
 {
     const csmInt32 count = _modelJson->GetMotionCount(group);
 
@@ -228,7 +228,7 @@ void LAppMinimumModel::PreloadMotionGroup(const csmChar* group)
 
         if (_debugMode)
         {
-            LAppPal::PrintLog("[APP]load motion: %s => [%s_%d] ", path.GetRawString(), group, i);
+            LWallpaperPal::PrintLog("[APP]load motion: %s => [%s_%d] ", path.GetRawString(), group, i);
         }
 
         csmByte* buffer;
@@ -262,7 +262,7 @@ void LAppMinimumModel::PreloadMotionGroup(const csmChar* group)
     SetupTextures();
 }
 
-void LAppMinimumModel::ReleaseMotionGroup(const csmChar* group) const
+void LWallpaperModel::ReleaseMotionGroup(const csmChar* group) const
 {
     const csmInt32 count = _modelJson->GetMotionCount(group);
     for (csmInt32 i = 0; i < count; i++)
@@ -281,7 +281,7 @@ void LAppMinimumModel::ReleaseMotionGroup(const csmChar* group) const
 *
 * すべてのモーションデータを解放する。
 */
-void LAppMinimumModel::ReleaseMotions()
+void LWallpaperModel::ReleaseMotions()
 {
     for (csmMap<csmString, ACubismMotion*>::const_iterator iter = _motions.Begin(); iter != _motions.End(); ++iter)
     {
@@ -296,7 +296,7 @@ void LAppMinimumModel::ReleaseMotions()
 *
 * すべての表情データを解放する。
 */
-void LAppMinimumModel::ReleaseExpressions()
+void LWallpaperModel::ReleaseExpressions()
 {
     for (csmMap<csmString, ACubismMotion*>::const_iterator iter = _expressions.Begin(); iter != _expressions.End(); ++iter)
     {
@@ -306,16 +306,16 @@ void LAppMinimumModel::ReleaseExpressions()
     _expressions.Clear();
 }
 
-void LAppMinimumModel::Update()
+void LWallpaperModel::Update()
 {
-    const csmFloat32 deltaTimeSeconds = LAppPal::GetDeltaTime();
+    const csmFloat32 deltaTimeSeconds = LWallpaperPal::GetDeltaTime();
     _userTimeSeconds += deltaTimeSeconds;
 
     _dragManager->Update(deltaTimeSeconds);
     _dragX = _dragManager->GetX();
     _dragY = _dragManager->GetY();
 
-    LAppMinimumDelegate* delegateInstance = LAppMinimumDelegate::GetInstance();
+    LWallpaperDelegate* delegateInstance = LWallpaperDelegate::GetInstance();
     delegateInstance->ParameterResetCount();
 
     // 重力加速度を-1~1の範囲になるよう正規化
@@ -442,7 +442,7 @@ void LAppMinimumModel::Update()
 
 }
 
-CubismMotionQueueEntryHandle LAppMinimumModel::StartRandomMotion(const csmChar* group, csmInt32 priority, ACubismMotion::FinishedMotionCallback onFinishedMotionHandler)
+CubismMotionQueueEntryHandle LWallpaperModel::StartRandomMotion(const csmChar* group, csmInt32 priority, ACubismMotion::FinishedMotionCallback onFinishedMotionHandler)
 {
     if (!_modelJson->GetMotionCount(group))
     {
@@ -454,7 +454,7 @@ CubismMotionQueueEntryHandle LAppMinimumModel::StartRandomMotion(const csmChar* 
     return StartMotion(group, no, priority, onFinishedMotionHandler);
 }
 
-CubismMotionQueueEntryHandle LAppMinimumModel::StartMotion(const csmChar* group, csmInt32 no, csmInt32 priority, ACubismMotion::FinishedMotionCallback onFinishedMotionHandler)
+CubismMotionQueueEntryHandle LWallpaperModel::StartMotion(const csmChar* group, csmInt32 no, csmInt32 priority, ACubismMotion::FinishedMotionCallback onFinishedMotionHandler)
 {
     if (priority == PriorityForce)
     {
@@ -464,7 +464,7 @@ CubismMotionQueueEntryHandle LAppMinimumModel::StartMotion(const csmChar* group,
     {
         if (_debugMode)
         {
-            LAppPal::PrintLog("[APP]can't start motion.");
+            LWallpaperPal::PrintLog("[APP]can't start motion.");
         }
         return InvalidMotionQueueEntryHandleValue;
     }
@@ -513,12 +513,12 @@ CubismMotionQueueEntryHandle LAppMinimumModel::StartMotion(const csmChar* group,
 
     if (_debugMode)
     {
-        LAppPal::PrintLog("[APP]start motion: [%s_%d]", group, no);
+        LWallpaperPal::PrintLog("[APP]start motion: [%s_%d]", group, no);
     }
     return  _motionManager->StartMotionPriority(motion, autoDelete, priority);
 }
 
-csmBool LAppMinimumModel::HitTest(const csmChar* hitAreaName, csmFloat32 x, csmFloat32 y)
+csmBool LWallpaperModel::HitTest(const csmChar* hitAreaName, csmFloat32 x, csmFloat32 y)
 {
     // 透明時は当たり判定なし。
     if (_opacity < 1)
@@ -537,7 +537,7 @@ csmBool LAppMinimumModel::HitTest(const csmChar* hitAreaName, csmFloat32 x, csmF
     return false; // 存在しない場合はfalse
 }
 
-void LAppMinimumModel::Draw(CubismMatrix44& matrix)
+void LWallpaperModel::Draw(CubismMatrix44& matrix)
 {
     if (!_model)
     {
@@ -550,12 +550,12 @@ void LAppMinimumModel::Draw(CubismMatrix44& matrix)
     GetRenderer<Rendering::CubismRenderer_OpenGLES2>()->DrawModel();
 }
 
-void LAppMinimumModel::SetExpression(const csmChar* expressionID)
+void LWallpaperModel::SetExpression(const csmChar* expressionID)
 {
     ACubismMotion* motion = _expressions[expressionID];
     if (_debugMode)
     {
-        LAppPal::PrintLog("[APP]expression: [%s]", expressionID);
+        LWallpaperPal::PrintLog("[APP]expression: [%s]", expressionID);
     }
 
     if (motion)
@@ -564,11 +564,11 @@ void LAppMinimumModel::SetExpression(const csmChar* expressionID)
     }
     else
     {
-        if (_debugMode) LAppPal::PrintLog("[APP]expression[%s] is null ", expressionID);
+        if (_debugMode) LWallpaperPal::PrintLog("[APP]expression[%s] is null ", expressionID);
     }
 }
 
-void LAppMinimumModel::SetRandomExpression()
+void LWallpaperModel::SetRandomExpression()
 {
     if (!_expressions.GetSize())
     {
@@ -581,7 +581,7 @@ void LAppMinimumModel::SetRandomExpression()
     SetExpression(name.GetRawString());
 }
 
-void LAppMinimumModel::ReloadRenderer()
+void LWallpaperModel::ReloadRenderer()
 {
     DeleteRenderer();
 
@@ -590,7 +590,7 @@ void LAppMinimumModel::ReloadRenderer()
     SetupTextures();
 }
 
-void LAppMinimumModel::SetupTextures()
+void LWallpaperModel::SetupTextures()
 {
     for (csmInt32 modelTextureNumber = 0; modelTextureNumber < _modelJson->GetTextureCount(); modelTextureNumber++)
     {
@@ -604,7 +604,7 @@ void LAppMinimumModel::SetupTextures()
         csmString texturePath = _modelJson->GetTextureFileName(modelTextureNumber);
         texturePath = csmString(_currentModelDirectory.c_str()) + texturePath;
 
-        LAppTextureManager::TextureInfo* texture = LAppMinimumDelegate::GetInstance()->GetTextureManager()->CreateTextureFromPngFile(texturePath.GetRawString());
+        LWallpaperTextureManager::TextureInfo* texture = LWallpaperDelegate::GetInstance()->GetTextureManager()->CreateTextureFromPngFile(texturePath.GetRawString());
         const csmInt32 glTextueNumber = texture->id;
 
         //OpenGL
@@ -618,17 +618,17 @@ void LAppMinimumModel::SetupTextures()
 #endif
 }
 
-void LAppMinimumModel::MotionEventFired(const csmString& eventValue)
+void LWallpaperModel::MotionEventFired(const csmString& eventValue)
 {
-    CubismLogInfo("%s is fired on LAppMinimumModel!!", eventValue.GetRawString());
+    CubismLogInfo("%s is fired on LWallpaperModel!!", eventValue.GetRawString());
 }
 
-Csm::Rendering::CubismOffscreenFrame_OpenGLES2 &LAppMinimumModel::GetRenderBuffer()
+Csm::Rendering::CubismOffscreenFrame_OpenGLES2 &LWallpaperModel::GetRenderBuffer()
 {
     return _renderBuffer;
 }
 
-void LAppMinimumModel::StartRandomMotion()
+void LWallpaperModel::StartRandomMotion()
 {
     //-----------------------------------------------------------------
     _model->LoadParameters(); // 前回セーブされた状態をロード
@@ -641,7 +641,7 @@ void LAppMinimumModel::StartRandomMotion()
     //-----------------------------------------------------------------
 }
 
-void LAppMinimumModel::StartRandomMotionWithOption(const Csm::csmChar* group, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler)
+void LWallpaperModel::StartRandomMotionWithOption(const Csm::csmChar* group, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler)
 {
     //-----------------------------------------------------------------
     _model->LoadParameters(); // 前回セーブされた状態をロード
@@ -654,7 +654,7 @@ void LAppMinimumModel::StartRandomMotionWithOption(const Csm::csmChar* group, Cs
     //-----------------------------------------------------------------
 }
 
-void LAppMinimumModel::StartOrderMotion(const Csm::csmChar* group,Csm::csmInt32 index, Csm::csmInt32 priority)
+void LWallpaperModel::StartOrderMotion(const Csm::csmChar* group, Csm::csmInt32 index, Csm::csmInt32 priority)
 {
     //-----------------------------------------------------------------
     _model->LoadParameters(); // 前回セーブされた状態をロード
@@ -667,7 +667,7 @@ void LAppMinimumModel::StartOrderMotion(const Csm::csmChar* group,Csm::csmInt32 
     //-----------------------------------------------------------------
 }
 
-void LAppMinimumModel::SetGravitationalAccelerationX(Csm::csmFloat32 gravity)
+void LWallpaperModel::SetGravitationalAccelerationX(Csm::csmFloat32 gravity)
 {
 
 }

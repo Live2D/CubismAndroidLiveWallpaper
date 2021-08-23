@@ -16,7 +16,7 @@
 * テクスチャID、Rectの管理。
 *
 */
-class LAppSprite
+class LWallpaperSprite
 {
 public:
     /**
@@ -41,12 +41,12 @@ public:
     * @param[in]       textureId    テクスチャID
     * @param[in]       programId    シェーダID
     */
-    LAppSprite(float x, float y, float width, float height, GLuint textureId, GLuint programId);
+    LWallpaperSprite(float x, float y, float width, float height, GLuint textureId, GLuint programId);
 
     /**
     * @brief デストラクタ
     */
-    ~LAppSprite();
+    ~LWallpaperSprite();
 
     /**
     * @brief スプライトサイズ変更

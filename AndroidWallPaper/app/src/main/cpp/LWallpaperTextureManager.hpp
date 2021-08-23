@@ -17,7 +17,7 @@
 *
 * 画像読み込み、管理を行うクラス。
 */
-class LAppTextureManager
+class LWallpaperTextureManager
 {
 public:
 
@@ -35,13 +35,13 @@ public:
     /**
     * @brief コンストラクタ
     */
-    LAppTextureManager();
+    LWallpaperTextureManager();
 
     /**
     * @brief デストラクタ
     *
     */
-    ~LAppTextureManager();
+    ~LWallpaperTextureManager();
 
 
     /**
