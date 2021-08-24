@@ -484,7 +484,7 @@ CubismMotionQueueEntryHandle LWallpaperModel::StartMotion(const csmChar* group, 
         csmByte* buffer;
         csmSizeInt size;
         buffer = CreateBuffer(path.GetRawString(), &size);
-        motion = static_cast<CubismMotion*>(LoadMotion(buffer, size, nullptr, onFinishedMotionHandler));
+        motion = static_cast<CubismMotion*>(LoadMotion(buffer, size, nullptr));
         csmFloat32 fadeTime = _modelJson->GetMotionFadeInTimeValue(group, no);
         if (fadeTime >= 0.0f)
         {
@@ -500,10 +500,8 @@ CubismMotionQueueEntryHandle LWallpaperModel::StartMotion(const csmChar* group, 
 
         DeleteBuffer(buffer, path.GetRawString());
     }
-    else
-    {
-        motion->SetFinishedMotionHandler(onFinishedMotionHandler);
-    }
+
+    motion->SetFinishedMotionHandler(onFinishedMotionHandler);
 
     //voice
     csmString voice = _modelJson->GetMotionSoundFileName(group, no);
