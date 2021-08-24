@@ -88,7 +88,9 @@ void LWallpaperDelegate::Run()
     LWallpaperPal::UpdateTime();
 
     // 画面の初期化
-
+    //glClearColor(_r, _g, _b, 1.0f);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClearDepthf(1.0f);
 
     //描画更新
     if (_view)
