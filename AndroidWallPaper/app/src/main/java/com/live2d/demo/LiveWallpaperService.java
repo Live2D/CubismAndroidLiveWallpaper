@@ -32,7 +32,7 @@ public class LiveWallpaperService extends GLWallpaperService {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS); // Android API 31から非推奨
-        filter.addAction(Intent.ACTION_POWER_CONNECTED);
+        filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
         filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
         this.registerReceiver(br,filter);
 
