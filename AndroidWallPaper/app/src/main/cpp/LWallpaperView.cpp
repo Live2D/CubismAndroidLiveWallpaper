@@ -113,23 +113,14 @@ void LWallpaperView::InitializeSprite()
     const string resourcesPath = ResourcesPath;
 
     string imageName = BackImageName;
-    LWallpaperTextureManager::TextureInfo* backgroundTexture = textureManager->CreateTextureFromPngFile(resourcesPath + imageName);
+
 
     float x = width * 0.5f;
     float y = height * 0.5f;
     float fWidth = width;
     float fHeight = height;
 
-    if(_backgroundImage == NULL)
-    {
-        _backgroundImage = new LWallpaperSprite(x, y, fWidth, fHeight, backgroundTexture->id, _programId);
-    }
-    else
-    {
-        _backgroundImage->ReSize(x, y, fWidth, fHeight);
-    }
 
-    _backgroundImage->SetColor(1.0f, 1.0f, 1.0f, 0.0f);
 
     // 画面全体を覆うサイズ
     x = width * 0.5f;
@@ -149,7 +140,7 @@ void LWallpaperView::Render()
 {
     LWallpaperLive2DManager* Live2DManager = LWallpaperLive2DManager::GetInstance();
 
-    _backgroundImage->Render();
+
 
     // Cubism更新・描画
     Live2DManager->OnUpdate();
