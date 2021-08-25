@@ -498,10 +498,8 @@ CubismMotionQueueEntryHandle LWallpaperModel::StartMotion(const csmChar* group, 
 
 
     }
-    else
-    {
-        motion->SetFinishedMotionHandler(onFinishedMotionHandler);
-    }
+
+    motion->SetFinishedMotionHandler(onFinishedMotionHandler);
 
     //voice
     csmString voice = _modelJson->GetMotionSoundFileName(group, no);
