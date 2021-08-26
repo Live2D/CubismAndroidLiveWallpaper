@@ -7,6 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 
 public class Live2DReceiver extends BroadcastReceiver {
+
+    private boolean airPlaneMode;
+
+    public Live2DReceiver (){
+        super();
+        airPlaneMode = false;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         switch (intent.getAction()) {
@@ -21,11 +29,16 @@ public class Live2DReceiver extends BroadcastReceiver {
                 float b = rnd.nextFloat();
                 JniBridgeJava.nativeSetClearColor(r,g,b);
                 break;
-            case Intent.ACTION_POWER_CONNECTED:
-                JniBridgeJava.SetBackGroundSpriteAlpha(1.0f);
-                break;
-            case Intent.ACTION_POWER_DISCONNECTED:
-                JniBridgeJava.SetBackGroundSpriteAlpha(0.0f);
+            case Intent.ACTION_AIRPLANE_MODE_CHANGED:
+                airPlaneMode = !airPlaneMode;
+                if (airPlaneMode)
+                {
+                    JniBridgeJava.SetBackGroundSpriteAlpha(1.0f);
+                }
+                else
+                {
+                    JniBridgeJava.SetBackGroundSpriteAlpha(0.0f);
+                }
                 break;
         }
     }

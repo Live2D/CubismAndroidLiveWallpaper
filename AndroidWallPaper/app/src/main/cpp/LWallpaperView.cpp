@@ -5,17 +5,17 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
-#include "LAppMinimumView.hpp"
+#include "LWallpaperView.hpp"
 #include <cmath>
 #include <string>
-#include "LAppPal.hpp"
-#include "LAppMinimumDelegate.hpp"
-#include "LAppDefine.hpp"
-#include "LAppTextureManager.hpp"
-#include "LAppMinimumLive2DManager.hpp"
+#include "LWallpaperPal.hpp"
+#include "LWallpaperDelegate.hpp"
+#include "LWallpaperDefine.hpp"
+#include "LWallpaperTextureManager.hpp"
+#include "LWallpaperLive2DManager.hpp"
 #include "TouchManager.hpp"
-#include "LAppSprite.hpp"
-#include "LAppMinimumModel.hpp"
+#include "LWallpaperSprite.hpp"
+#include "LWallpaperModel.hpp"
 
 #include <Rendering/OpenGL/CubismOffscreenSurface_OpenGLES2.hpp>
 #include <Rendering/OpenGL/CubismRenderer_OpenGLES2.hpp>
@@ -23,10 +23,10 @@
 #include "JniBridgeC.hpp"
 
 using namespace std;
-using namespace LAppDefine;
+using namespace LWallpaperDefine;
 using namespace Csm;
 
-LAppMinimumView::LAppMinimumView():
+LWallpaperView::LWallpaperView():
         _programId(0),
         _renderSprite(nullptr),
         _renderTarget(SelectTarget_None),
@@ -47,7 +47,7 @@ LAppMinimumView::LAppMinimumView():
     _viewMatrix = new CubismViewMatrix();
 }
 
-LAppMinimumView::~LAppMinimumView()
+LWallpaperView::~LWallpaperView()
 {
     _renderBuffer.DestroyOffscreenFrame();
     delete _renderSprite;
@@ -58,10 +58,10 @@ LAppMinimumView::~LAppMinimumView()
     delete _backgroundImage;
 }
 
-void LAppMinimumView::Initialize()
+void LWallpaperView::Initialize()
 {
-    int width = LAppMinimumDelegate::GetInstance()->GetWindowWidth();
-    int height = LAppMinimumDelegate::GetInstance()->GetWindowHeight();
+    int width = LWallpaperDelegate::GetInstance()->GetWindowWidth();
+    int height = LWallpaperDelegate::GetInstance()->GetWindowHeight();
 
     // 縦サイズを基準とする
     float ratio = static_cast<float>(width) / static_cast<float>(height);
@@ -99,21 +99,21 @@ void LAppMinimumView::Initialize()
     );
 }
 
-void LAppMinimumView::InitializeShader()
+void LWallpaperView::InitializeShader()
 {
-    _programId = LAppMinimumDelegate::GetInstance()->CreateShader();
+    _programId = LWallpaperDelegate::GetInstance()->CreateShader();
 }
 
-void LAppMinimumView::InitializeSprite()
+void LWallpaperView::InitializeSprite()
 {
-    int width = LAppMinimumDelegate::GetInstance()->GetWindowWidth();
-    int height = LAppMinimumDelegate::GetInstance()->GetWindowHeight();
+    int width = LWallpaperDelegate::GetInstance()->GetWindowWidth();
+    int height = LWallpaperDelegate::GetInstance()->GetWindowHeight();
 
-    LAppTextureManager* textureManager = LAppMinimumDelegate::GetInstance()->GetTextureManager();
+    LWallpaperTextureManager* textureManager = LWallpaperDelegate::GetInstance()->GetTextureManager();
     const string resourcesPath = ResourcesPath;
 
     string imageName = BackImageName;
-    LAppTextureManager::TextureInfo* backgroundTexture = textureManager->CreateTextureFromPngFile(resourcesPath + imageName);
+    LWallpaperTextureManager::TextureInfo* backgroundTexture = textureManager->CreateTextureFromPngFile(resourcesPath + imageName);
 
     float x = width * 0.5f;
     float y = height * 0.5f;
@@ -122,7 +122,7 @@ void LAppMinimumView::InitializeSprite()
 
     if(_backgroundImage == NULL)
     {
-        _backgroundImage = new LAppSprite(x, y, fWidth, fHeight, backgroundTexture->id, _programId);
+        _backgroundImage = new LWallpaperSprite(x, y, fWidth, fHeight, backgroundTexture->id, _programId);
     }
     else
     {
@@ -137,7 +137,7 @@ void LAppMinimumView::InitializeSprite()
 
     if (!_renderSprite)
     {
-        _renderSprite = new LAppSprite(x, y, width, height, 0, _programId);
+        _renderSprite = new LWallpaperSprite(x, y, width, height, 0, _programId);
     }
     else
     {
@@ -145,9 +145,9 @@ void LAppMinimumView::InitializeSprite()
     }
 }
 
-void LAppMinimumView::Render()
+void LWallpaperView::Render()
 {
-    LAppMinimumLive2DManager* Live2DManager = LAppMinimumLive2DManager::GetInstance();
+    LWallpaperLive2DManager* Live2DManager = LWallpaperLive2DManager::GetInstance();
 
     _backgroundImage->Render();
 
@@ -168,7 +168,7 @@ void LAppMinimumView::Render()
         float alpha = GetSpriteAlpha(2); // サンプルとしてαに適当な差をつける
         _renderSprite->SetColor(1.0f, 1.0f, 1.0f, alpha);
 
-        LAppMinimumModel *model = Live2DManager->GetModel();
+        LWallpaperModel *model = Live2DManager->GetModel();
         if (model)
         {
             _renderSprite->RenderImmidiate(model->GetRenderBuffer().GetColorBuffer(), uvVertex);
@@ -176,25 +176,25 @@ void LAppMinimumView::Render()
     }
 }
 
-void LAppMinimumView::OnTouchesBegan(float pointX, float pointY) const
+void LWallpaperView::OnTouchesBegan(float pointX, float pointY) const
 {
     _touchManager->TouchesBegan(pointX, pointY);
 }
 
-void LAppMinimumView::OnTouchesMoved(float pointX, float pointY) const
+void LWallpaperView::OnTouchesMoved(float pointX, float pointY) const
 {
     float viewX = this->TransformViewX(_touchManager->GetX());
     float viewY = this->TransformViewY(_touchManager->GetY());
 
     _touchManager->TouchesMoved(pointX, pointY);
 
-    LAppMinimumLive2DManager::GetInstance()->OnDrag(viewX, viewY);
+    LWallpaperLive2DManager::GetInstance()->OnDrag(viewX, viewY);
 }
 
-Csm::CubismVector2 LAppMinimumView::OnTouchesEnded(float pointX, float pointY)
+Csm::CubismVector2 LWallpaperView::OnTouchesEnded(float pointX, float pointY)
 {
     // タッチ終了
-    LAppMinimumLive2DManager* live2DManager = LAppMinimumLive2DManager::GetInstance();
+    LWallpaperLive2DManager* live2DManager = LWallpaperLive2DManager::GetInstance();
     live2DManager->OnDrag(0.0f, 0.0f);
 
     // シングルタップ
@@ -206,29 +206,29 @@ Csm::CubismVector2 LAppMinimumView::OnTouchesEnded(float pointX, float pointY)
     return {x,y};
 }
 
-float LAppMinimumView::TransformViewX(float deviceX) const
+float LWallpaperView::TransformViewX(float deviceX) const
 {
     float screenX = _deviceToScreen->TransformX(deviceX); // 論理座標変換した座標を取得。
     return _viewMatrix->InvertTransformX(screenX); // 拡大、縮小、移動後の値。
 }
 
-float LAppMinimumView::TransformViewY(float deviceY) const
+float LWallpaperView::TransformViewY(float deviceY) const
 {
     float screenY = _deviceToScreen->TransformY(deviceY); // 論理座標変換した座標を取得。
     return _viewMatrix->InvertTransformY(screenY); // 拡大、縮小、移動後の値。
 }
 
-float LAppMinimumView::TransformScreenX(float deviceX) const
+float LWallpaperView::TransformScreenX(float deviceX) const
 {
     return _deviceToScreen->TransformX(deviceX);
 }
 
-float LAppMinimumView::TransformScreenY(float deviceY) const
+float LWallpaperView::TransformScreenY(float deviceY) const
 {
     return _deviceToScreen->TransformY(deviceY);
 }
 
-void LAppMinimumView::PreModelDraw(LAppMinimumModel &refModel)
+void LWallpaperView::PreModelDraw(LWallpaperModel &refModel)
 {
     // 別のレンダリングターゲットへ向けて描画する場合の使用するフレームバッファ
     Csm::Rendering::CubismOffscreenFrame_OpenGLES2* useTarget = nullptr;
@@ -241,8 +241,8 @@ void LAppMinimumView::PreModelDraw(LAppMinimumModel &refModel)
 
         if (!useTarget->IsValid())
         {// 描画ターゲット内部未作成の場合はここで作成
-            int width = LAppMinimumDelegate::GetInstance()->GetWindowWidth();
-            int height = LAppMinimumDelegate::GetInstance()->GetWindowHeight();
+            int width = LWallpaperDelegate::GetInstance()->GetWindowWidth();
+            int height = LWallpaperDelegate::GetInstance()->GetWindowHeight();
 
             // モデル描画キャンバス
             useTarget->CreateOffscreenFrame(static_cast<csmUint32>(width), static_cast<csmUint32>(height));
@@ -254,7 +254,7 @@ void LAppMinimumView::PreModelDraw(LAppMinimumModel &refModel)
     }
 }
 
-void LAppMinimumView::PostModelDraw(LAppMinimumModel &refModel)
+void LWallpaperView::PostModelDraw(LWallpaperModel &refModel)
 {
     // 別のレンダリングターゲットへ向けて描画する場合の使用するフレームバッファ
     Csm::Rendering::CubismOffscreenFrame_OpenGLES2* useTarget = nullptr;
@@ -285,19 +285,19 @@ void LAppMinimumView::PostModelDraw(LAppMinimumModel &refModel)
     }
 }
 
-void LAppMinimumView::SwitchRenderingTarget(SelectTarget targetType)
+void LWallpaperView::SwitchRenderingTarget(SelectTarget targetType)
 {
     _renderTarget = targetType;
 }
 
-void LAppMinimumView::SetRenderTargetClearColor(float r, float g, float b)
+void LWallpaperView::SetRenderTargetClearColor(float r, float g, float b)
 {
     _clearColor[0] = r;
     _clearColor[1] = g;
     _clearColor[2] = b;
 }
 
-float LAppMinimumView::GetSpriteAlpha(int assign) const
+float LWallpaperView::GetSpriteAlpha(int assign) const
 {
     // assignの数値に応じて適当に決定
     float alpha = 0.25f + static_cast<float>(assign) * 0.5f; // サンプルとしてαに適当な差をつける
@@ -313,7 +313,7 @@ float LAppMinimumView::GetSpriteAlpha(int assign) const
     return alpha;
 }
 
-void LAppMinimumView::SetBackGroundSpriteColor(float r, float g, float b, float a)
+void LWallpaperView::SetBackGroundSpriteColor(float r, float g, float b, float a)
 {
     if (_backgroundImage)
     {

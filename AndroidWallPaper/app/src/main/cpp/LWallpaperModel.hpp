@@ -19,24 +19,24 @@
  *         モデル生成、機能コンポーネント生成、更新処理とレンダリングの呼び出しを行う。
  *
  */
-class LAppMinimumModel : public Csm::CubismUserModel
+class LWallpaperModel : public Csm::CubismUserModel
 {
 public:
     /**
      * @brief コンストラクタ
      */
-    LAppMinimumModel();
+    LWallpaperModel();
 
     /**
     * @brief コンストラクタ
     */
-    LAppMinimumModel(const std::string modelDirectoryName, const std::string currentModelDirectory);
+    LWallpaperModel(const std::string modelDirectoryName, const std::string currentModelDirectory);
 
     /**
      * @brief デストラクタ
      *
      */
-    virtual ~LAppMinimumModel();
+    virtual ~LWallpaperModel();
 
     /**
     * @brief パスを作成

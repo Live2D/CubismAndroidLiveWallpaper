@@ -5,39 +5,39 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
-#include "LAppMinimumDelegate.hpp"
+#include "LWallpaperDelegate.hpp"
 #include <iostream>
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
-#include "LAppMinimumView.hpp"
-#include "LAppPal.hpp"
-#include "LAppDefine.hpp"
-#include "LAppMinimumLive2DManager.hpp"
-#include "LAppTextureManager.hpp"
+#include "LWallpaperView.hpp"
+#include "LWallpaperPal.hpp"
+#include "LWallpaperDefine.hpp"
+#include "LWallpaperLive2DManager.hpp"
+#include "LWallpaperTextureManager.hpp"
 #include "JniBridgeC.hpp"
 
 #include "Utils/CubismDebug.hpp"
-#include "LAppMinimumModel.hpp"
+#include "LWallpaperModel.hpp"
 
 using namespace Csm;
 using namespace std;
-using namespace LAppDefine;
+using namespace LWallpaperDefine;
 
 namespace {
-    LAppMinimumDelegate* s_instance = nullptr;
+    LWallpaperDelegate* s_instance = nullptr;
 }
 
-LAppMinimumDelegate* LAppMinimumDelegate::GetInstance()
+LWallpaperDelegate* LWallpaperDelegate::GetInstance()
 {
     if (!s_instance)
     {
-        s_instance = new LAppMinimumDelegate();
+        s_instance = new LWallpaperDelegate();
     }
 
     return s_instance;
 }
 
-void LAppMinimumDelegate::ReleaseInstance()
+void LWallpaperDelegate::ReleaseInstance()
 {
     if (s_instance)
     {
@@ -48,17 +48,17 @@ void LAppMinimumDelegate::ReleaseInstance()
 }
 
 
-void LAppMinimumDelegate::OnStart()
+void LWallpaperDelegate::OnStart()
 {
-    LAppPal::UpdateTime();
+    LWallpaperPal::UpdateTime();
 }
 
-void LAppMinimumDelegate::OnPause()
+void LWallpaperDelegate::OnPause()
 {
 
 }
 
-void LAppMinimumDelegate::OnStop()
+void LWallpaperDelegate::OnStop()
 {
     if (_view)
     {
@@ -72,20 +72,20 @@ void LAppMinimumDelegate::OnStop()
     }
 
     // リソースを解放
-    LAppMinimumLive2DManager::ReleaseInstance();
+    LWallpaperLive2DManager::ReleaseInstance();
 
     CubismFramework::Dispose();
 }
 
-void LAppMinimumDelegate::OnDestroy()
+void LWallpaperDelegate::OnDestroy()
 {
     ReleaseInstance();
 }
 
-void LAppMinimumDelegate::Run()
+void LWallpaperDelegate::Run()
 {
     // 時間更新
-    LAppPal::UpdateTime();
+    LWallpaperPal::UpdateTime();
 
     // 画面の初期化
     glClearColor(_r, _g, _b, 1.0f);
@@ -99,10 +99,10 @@ void LAppMinimumDelegate::Run()
     }
 }
 
-void LAppMinimumDelegate::OnSurfaceCreate()
+void LWallpaperDelegate::OnSurfaceCreate()
 {
-    _view = new LAppMinimumView();
-    _textureManager = new LAppTextureManager();
+    _view = new LWallpaperView();
+    _textureManager = new LWallpaperTextureManager();
 
     // setup view
     int width,height;
@@ -124,7 +124,7 @@ void LAppMinimumDelegate::OnSurfaceCreate()
     _view->InitializeShader();
 }
 
-void LAppMinimumDelegate::OnSurfaceChanged(float width, float height)
+void LWallpaperDelegate::OnSurfaceChanged(float width, float height)
 {
     glViewport(0, 0, width, height);
     _width = width;
@@ -137,7 +137,7 @@ void LAppMinimumDelegate::OnSurfaceChanged(float width, float height)
     _isActive = true;
 }
 
-LAppMinimumDelegate::LAppMinimumDelegate():
+LWallpaperDelegate::LWallpaperDelegate():
     _cubismOption(),
     _isCaptured(false),
     _mouseX(0.0f),
@@ -154,17 +154,17 @@ LAppMinimumDelegate::LAppMinimumDelegate():
     _b(0.0f)
 {
     // Setup Cubism
-    _cubismOption.LogFunction = LAppPal::PrintMessage;
-    _cubismOption.LoggingLevel = LAppDefine::CubismLoggingLevel;
+    _cubismOption.LogFunction = LWallpaperPal::PrintMessage;
+    _cubismOption.LoggingLevel = LWallpaperDefine::CubismLoggingLevel;
     CubismFramework::CleanUp();
     CubismFramework::StartUp(&_cubismAllocator, &_cubismOption);
 }
 
-LAppMinimumDelegate::~LAppMinimumDelegate()
+LWallpaperDelegate::~LWallpaperDelegate()
 {
 }
 
-void LAppMinimumDelegate::OnTouchBegan(double x, double y)
+void LWallpaperDelegate::OnTouchBegan(double x, double y)
 {
     _mouseX = static_cast<float>(x);
     _mouseY = static_cast<float>(y);
@@ -178,7 +178,7 @@ void LAppMinimumDelegate::OnTouchBegan(double x, double y)
     }
 }
 
-void LAppMinimumDelegate::OnTouchEnded(double x, double y)
+void LWallpaperDelegate::OnTouchEnded(double x, double y)
 {
     _mouseX = static_cast<float>(x);
     _mouseY = static_cast<float>(y);
@@ -193,7 +193,7 @@ void LAppMinimumDelegate::OnTouchEnded(double x, double y)
     }
 }
 
-void LAppMinimumDelegate::OnTouchMoved(double x, double y)
+void LWallpaperDelegate::OnTouchMoved(double x, double y)
 {
     _mouseX = static_cast<float>(x);
     _mouseY = static_cast<float>(y);
@@ -206,7 +206,7 @@ void LAppMinimumDelegate::OnTouchMoved(double x, double y)
     }
 }
 
-GLuint LAppMinimumDelegate::CreateShader()
+GLuint LWallpaperDelegate::CreateShader()
 {
     //バーテックスシェーダのコンパイル
     GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
@@ -249,17 +249,17 @@ GLuint LAppMinimumDelegate::CreateShader()
     return programId;
 }
 
-void LAppMinimumDelegate::StartRandomMotion()
+void LWallpaperDelegate::StartRandomMotion()
 {
-    LAppMinimumLive2DManager::GetInstance()->GetModel()->StartRandomMotion();
+    LWallpaperLive2DManager::GetInstance()->GetModel()->StartRandomMotion();
 }
 
-void LAppMinimumDelegate::StartMotion(Csm::csmInt32 index)
+void LWallpaperDelegate::StartMotion(Csm::csmInt32 index)
 {
-    LAppMinimumLive2DManager::GetInstance()->GetModel()->StartOrderMotion(MotionGroupIdle,index,PriorityIdle);
+    LWallpaperLive2DManager::GetInstance()->GetModel()->StartOrderMotion(MotionGroupIdle, index, PriorityIdle);
 }
 
-void LAppMinimumDelegate::ParameterResetCount()
+void LWallpaperDelegate::ParameterResetCount()
 {
     if (_isSecondCount)
     {
@@ -269,11 +269,11 @@ void LAppMinimumDelegate::ParameterResetCount()
             _deltaTimeCount = 0.0f;
         }
 
-        _deltaTimeCount += LAppPal::GetDeltaTime();
+        _deltaTimeCount += LWallpaperPal::GetDeltaTime();
     }
 }
 
-void LAppMinimumDelegate::SetClearColor(float r, float g, float b)
+void LWallpaperDelegate::SetClearColor(float r, float g, float b)
 {
     //カラー情報を設定
     _r = r;
@@ -281,7 +281,7 @@ void LAppMinimumDelegate::SetClearColor(float r, float g, float b)
     _b = b;
 }
 
-void LAppMinimumDelegate::SetBackGroundSpriteAlpha(float a)
+void LWallpaperDelegate::SetBackGroundSpriteAlpha(float a)
 {
     if (_view)
     {
@@ -289,7 +289,7 @@ void LAppMinimumDelegate::SetBackGroundSpriteAlpha(float a)
     }
 }
 
-void LAppMinimumDelegate::SetGravitationalAccelerationX(float gravity)
+void LWallpaperDelegate::SetGravitationalAccelerationX(float gravity)
 {
-    LAppMinimumLive2DManager::GetInstance()->SetGravitationalAccelerationX(gravity);
+    LWallpaperLive2DManager::GetInstance()->SetGravitationalAccelerationX(gravity);
 }

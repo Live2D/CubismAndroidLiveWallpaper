@@ -5,10 +5,10 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
-#include "LAppDefine.hpp"
+#include "LWallpaperDefine.hpp"
 #include <CubismFramework.hpp>
 
-namespace LAppDefine {
+namespace LWallpaperDefine {
 
     using namespace Csm;
 

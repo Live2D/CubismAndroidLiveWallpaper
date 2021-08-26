@@ -5,10 +5,10 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
-#include "LAppSprite.hpp"
-#include "LAppMinimumDelegate.hpp"
+#include "LWallpaperSprite.hpp"
+#include "LWallpaperDelegate.hpp"
 
-LAppSprite::LAppSprite(float x, float y, float width, float height, GLuint textureId, GLuint programId)
+LWallpaperSprite::LWallpaperSprite(float x, float y, float width, float height, GLuint textureId, GLuint programId)
     : _rect()
 {
     _rect.left  = (x - width  * 0.5f);
@@ -29,11 +29,11 @@ LAppSprite::LAppSprite(float x, float y, float width, float height, GLuint textu
     _spriteColor[3] = 1.0f;
 }
 
-LAppSprite::~LAppSprite()
+LWallpaperSprite::~LWallpaperSprite()
 {
 }
 
-void LAppSprite::ReSize(float x, float y, float width, float height)
+void LWallpaperSprite::ReSize(float x, float y, float width, float height)
 {
     _rect.left  = (x - width  * 0.5f);
     _rect.right = (x + width  * 0.5f);
@@ -41,7 +41,7 @@ void LAppSprite::ReSize(float x, float y, float width, float height)
     _rect.down  = (y - height * 0.5f);
 }
 
-void LAppSprite::Render() const
+void LWallpaperSprite::Render() const
 {
     glEnable(GL_TEXTURE_2D);
     const GLfloat uvVertex[] =
@@ -61,8 +61,8 @@ void LAppSprite::Render() const
     glUniform1i(_textureLocation, 0);
 
     // 画面サイズを取得する
-    int maxWidth = LAppMinimumDelegate::GetInstance()->GetWindowWidth();
-    int maxHeight = LAppMinimumDelegate::GetInstance()->GetWindowHeight();
+    int maxWidth = LWallpaperDelegate::GetInstance()->GetWindowWidth();
+    int maxHeight = LWallpaperDelegate::GetInstance()->GetWindowHeight();
 
     // 頂点データ
     float positionVertex[] =
@@ -84,7 +84,7 @@ void LAppSprite::Render() const
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
-void LAppSprite::RenderImmidiate(GLuint textureId, const GLfloat uvVertex[8]) const
+void LWallpaperSprite::RenderImmidiate(GLuint textureId, const GLfloat uvVertex[8]) const
 {
     glEnable(GL_TEXTURE_2D);
 
@@ -96,8 +96,8 @@ void LAppSprite::RenderImmidiate(GLuint textureId, const GLfloat uvVertex[8]) co
     glUniform1i(_textureLocation, 0);
 
     // 画面サイズを取得する
-    int maxWidth = LAppMinimumDelegate::GetInstance()->GetWindowWidth();
-    int maxHeight = LAppMinimumDelegate::GetInstance()->GetWindowHeight();
+    int maxWidth = LWallpaperDelegate::GetInstance()->GetWindowWidth();
+    int maxHeight = LWallpaperDelegate::GetInstance()->GetWindowHeight();
 
     // 頂点データ
     float positionVertex[] =
@@ -119,10 +119,10 @@ void LAppSprite::RenderImmidiate(GLuint textureId, const GLfloat uvVertex[8]) co
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
-bool LAppSprite::IsHit(float pointX, float pointY) const
+bool LWallpaperSprite::IsHit(float pointX, float pointY) const
 {
     // 画面高さを取得する
-    int maxHeight = LAppMinimumDelegate::GetInstance()->GetWindowHeight();
+    int maxHeight = LWallpaperDelegate::GetInstance()->GetWindowHeight();
 
     //Y座標は変換する必要あり
     float y = maxHeight - pointY;
@@ -130,7 +130,7 @@ bool LAppSprite::IsHit(float pointX, float pointY) const
     return (pointX >= _rect.left && pointX <= _rect.right && y <= _rect.up && y >= _rect.down);
 }
 
-void LAppSprite::SetColor(float r, float g, float b, float a)
+void LWallpaperSprite::SetColor(float r, float g, float b, float a)
 {
     _spriteColor[0] = r;
     _spriteColor[1] = g;

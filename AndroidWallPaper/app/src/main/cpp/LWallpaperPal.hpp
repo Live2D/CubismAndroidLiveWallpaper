@@ -16,7 +16,7 @@
 * ファイル読み込みや時刻取得等のプラットフォームに依存する関数をまとめる
 *
 */
-class LAppPal
+class LWallpaperPal
 {
 public:
     /**

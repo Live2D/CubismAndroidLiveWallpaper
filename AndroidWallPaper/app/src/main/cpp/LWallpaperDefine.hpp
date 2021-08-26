@@ -13,7 +13,7 @@
 * @brief  Sample Appで使用する定数
 *
 */
-namespace LAppDefine {
+namespace LWallpaperDefine {
 
     using namespace Csm;
 
