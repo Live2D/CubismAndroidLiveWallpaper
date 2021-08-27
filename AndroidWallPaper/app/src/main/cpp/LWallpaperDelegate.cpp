@@ -79,6 +79,7 @@ void LWallpaperDelegate::OnStop()
 
 void LWallpaperDelegate::OnDestroy()
 {
+    OnStop();
     ReleaseInstance();
 }
 
