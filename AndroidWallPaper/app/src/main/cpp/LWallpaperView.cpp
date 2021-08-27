@@ -52,6 +52,8 @@ LWallpaperView::~LWallpaperView()
     _renderBuffer.DestroyOffscreenFrame();
     delete _renderSprite;
 
+    glDeleteShader(_programId);
+
     delete _viewMatrix;
     delete _deviceToScreen;
     delete _touchManager;
