@@ -137,7 +137,10 @@ void LWallpaperLive2DManager::LoadModel(const std::string modelDirectoryName)
 
 void LWallpaperLive2DManager::SetGravitationalAccelerationX(float gravity)
 {
-    _model->SetGravitationalAccelerationX(gravity);
+    if(_model)
+    {
+        _model->SetGravitationalAccelerationX(gravity);
+    }
 }
 
 
