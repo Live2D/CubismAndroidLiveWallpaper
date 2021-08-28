@@ -30,6 +30,7 @@ using namespace LWallpaperDefine;
 namespace {
     const csmFloat32 gravityMaxValue = 9.81f;
     const csmFloat32 gravitationalAccelerationRange = 0.6f;
+    const csmFloat32 translateXRange = 0.3f;
     const csmFloat32 conditionStandardValue = 0.001f;
     const csmFloat32 calculationReferenceNumber = 10.0f;
 
@@ -343,7 +344,7 @@ void LWallpaperModel::Update()
             _eyeBlink->UpdateParameters(_model, deltaTimeSeconds); // まばたき
         }
 
-        if (canResetParameter && (CubismMath::AbsF(_gravitationalAccelerationX) < conditionStandardValue))
+        if (canResetParameter && (CubismMath::AbsF(_gravitationalAccelerationX) < conditionStandardValue * calculationReferenceNumber))
         {
             // モデル読み込み時のパラメータとの差分を出し、元に戻す
             for (csmInt32 i = 0; i < _model->GetParameterCount(); ++i)
@@ -414,8 +415,25 @@ void LWallpaperModel::Update()
 
         // 範囲を超えないように設定
         _gravitationalAccelerationX = CubismMath::RangeF(_gravitationalAccelerationX,-gravitationalAccelerationRange,gravitationalAccelerationRange);
+
+        // これまでの移動量を取得
+        csmFloat32 tx = _modelMatrix->GetTranslateX();
+
+        if (CubismMath::AbsF(_gravitationalAccelerationX) < conditionStandardValue * calculationReferenceNumber)
+        {
+            csmFloat32 accel = -tx * LWallpaperPal::GetDeltaTime() * calculationReferenceNumber;
+            tx += accel;
+        }
+        else
+        {
+            tx += -_gravitationalAccelerationX * LWallpaperPal::GetDeltaTime();
+        }
+
+        // 範囲を超えないように設定
+        tx = CubismMath::RangeF(tx,-translateXRange,translateXRange);
+
         //モデルの位置を設定
-        _modelMatrix->SetX(-_gravitationalAccelerationX / 2.0f);
+        _modelMatrix->SetX(tx);
     }
 
     _model->SaveParameters(); // 状態を保存
