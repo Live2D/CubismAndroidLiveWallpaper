@@ -15,9 +15,9 @@
 #include "LWallpaperLive2DManager.hpp"
 #include "LWallpaperTextureManager.hpp"
 #include "JniBridgeC.hpp"
-
 #include "Utils/CubismDebug.hpp"
 #include "LWallpaperModel.hpp"
+#include "Math/CubismMath.hpp"
 
 using namespace Csm;
 using namespace std;
@@ -292,5 +292,9 @@ void LWallpaperDelegate::SetBackGroundSpriteAlpha(float a)
 
 void LWallpaperDelegate::SetGravitationalAccelerationX(float gravity)
 {
+    if (CubismMath::AbsF(gravity) < 0.001f)
+    {
+        return;
+    }
     LWallpaperLive2DManager::GetInstance()->SetGravitationalAccelerationX(gravity);
 }
