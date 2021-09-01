@@ -320,6 +320,7 @@ void LWallpaperModel::Update()
     delegateInstance->ParameterResetCount();
 
     // 重力加速度を-1~1の範囲になるよう正規化
+    // 第五問 1.1
     _gravitationalAccelerationX = _gravitationalAccelerationX / gravityMaxValue;
 
     // モーションによるパラメータ更新の有無
@@ -400,6 +401,7 @@ void LWallpaperModel::Update()
     }
 
     // 重力加速度による向きと位置の調整
+    // 第五問 1.2
     {
         // 10倍した値を設定
         csmFloat32 accelValue = _gravitationalAccelerationX * calculationReferenceNumber;
@@ -491,6 +493,7 @@ CubismMotionQueueEntryHandle LWallpaperModel::StartMotion(const csmChar* group, 
 
     //ex) idle_0
     csmString name = Utils::CubismString::GetFormatedString("%s_%d", group, no);
+    // 第二問 1.1
     CubismMotion* motion = static_cast<CubismMotion*>(_motions[name.GetRawString()]);
     csmBool autoDelete = false;
 
@@ -499,6 +502,7 @@ CubismMotionQueueEntryHandle LWallpaperModel::StartMotion(const csmChar* group, 
         csmString path = fileName;
         path = csmString(_currentModelDirectory.c_str()) + path;
 
+        // 第二問 1.2
         csmByte* buffer;
         csmSizeInt size;
         buffer = CreateBuffer(path.GetRawString(), &size);
@@ -516,6 +520,7 @@ CubismMotionQueueEntryHandle LWallpaperModel::StartMotion(const csmChar* group, 
         }
         autoDelete = true; // 終了時にメモリから削除
 
+        // 第二問 1.3
         DeleteBuffer(buffer, path.GetRawString());
     }
 
@@ -687,5 +692,6 @@ void LWallpaperModel::StartOrderMotion(const Csm::csmChar* group, Csm::csmInt32 
 
 void LWallpaperModel::SetGravitationalAccelerationX(Csm::csmFloat32 gravity)
 {
+    // 第五問 1.3
     _gravitationalAccelerationX = gravity;
 }
