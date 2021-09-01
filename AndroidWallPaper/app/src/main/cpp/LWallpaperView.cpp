@@ -115,14 +115,14 @@ void LWallpaperView::InitializeSprite()
     const string resourcesPath = ResourcesPath;
 
     string imageName = BackImageName;
-
+    // 第四問 2.2
 
     float x = width * 0.5f;
     float y = height * 0.5f;
     float fWidth = width;
     float fHeight = height;
 
-
+    // 第四問 2.3
 
     // 画面全体を覆うサイズ
     x = width * 0.5f;
@@ -142,7 +142,7 @@ void LWallpaperView::Render()
 {
     LWallpaperLive2DManager* Live2DManager = LWallpaperLive2DManager::GetInstance();
 
-
+    // 第四問 2.4
 
     // Cubism更新・描画
     Live2DManager->OnUpdate();
@@ -171,12 +171,12 @@ void LWallpaperView::Render()
 
 void LWallpaperView::OnTouchesBegan(float pointX, float pointY) const
 {
-
+    // 第三問 1.1
 }
 
 void LWallpaperView::OnTouchesMoved(float pointX, float pointY) const
 {
-
+    // 第三問 1.2
 }
 
 Csm::CubismVector2 LWallpaperView::OnTouchesEnded(float pointX, float pointY)
@@ -186,6 +186,7 @@ Csm::CubismVector2 LWallpaperView::OnTouchesEnded(float pointX, float pointY)
     live2DManager->OnDrag(0.0f, 0.0f);
 
     // シングルタップ
+    // 第三問 1.3
     float x=0.0f; // 論理座標変換した座標を取得。
     float y=0.0f; // 論理座標変換した座標を取得。
 
@@ -303,5 +304,5 @@ float LWallpaperView::GetSpriteAlpha(int assign) const
 
 void LWallpaperView::SetBackGroundSpriteColor(float r, float g, float b, float a)
 {
-
+    // 第四問 2.1
 }

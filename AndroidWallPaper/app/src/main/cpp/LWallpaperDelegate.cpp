@@ -88,6 +88,7 @@ void LWallpaperDelegate::Run()
     // 時間更新
     LWallpaperPal::UpdateTime();
 
+    // 第一問 2.1
     // 画面の初期化
     //glClearColor(_r, _g, _b, 1.0f);
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -277,12 +278,12 @@ void LWallpaperDelegate::ParameterResetCount()
 void LWallpaperDelegate::SetClearColor(float r, float g, float b)
 {
     //カラー情報を設定
-
+    // 第四問 1.1
 }
 
 void LWallpaperDelegate::SetBackGroundSpriteAlpha(float a)
 {
-
+    // 第四問 1.2
 }
 
 void LWallpaperDelegate::SetGravitationalAccelerationX(float gravity)

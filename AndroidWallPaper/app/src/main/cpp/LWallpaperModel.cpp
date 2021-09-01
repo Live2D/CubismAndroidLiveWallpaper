@@ -319,7 +319,7 @@ void LWallpaperModel::Update()
     delegateInstance->ParameterResetCount();
 
     // 重力加速度を-1~1の範囲になるよう正規化
-
+    // 第五問 1.1
 
     // モーションによるパラメータ更新の有無
     csmBool motionUpdated = false;
@@ -399,6 +399,7 @@ void LWallpaperModel::Update()
     }
 
     // 重力加速度による向きと位置の調整
+    // 第五問 1.2
     {
         // 10倍した値を設定
 
@@ -473,6 +474,7 @@ CubismMotionQueueEntryHandle LWallpaperModel::StartMotion(const csmChar* group, 
 
     //ex) idle_0
     csmString name = Utils::CubismString::GetFormatedString("%s_%d", group, no);
+    // 第二問 1.1
     CubismMotion* motion;
     csmBool autoDelete = false;
 
@@ -481,7 +483,7 @@ CubismMotionQueueEntryHandle LWallpaperModel::StartMotion(const csmChar* group, 
         csmString path = fileName;
         path = csmString(_currentModelDirectory.c_str()) + path;
 
-
+        // 第二問 1.2
 
         csmFloat32 fadeTime = _modelJson->GetMotionFadeInTimeValue(group, no);
         if (fadeTime >= 0.0f)
@@ -496,7 +498,7 @@ CubismMotionQueueEntryHandle LWallpaperModel::StartMotion(const csmChar* group, 
         }
         autoDelete = true; // 終了時にメモリから削除
 
-
+        // 第二問 1.3
     }
 
     motion->SetFinishedMotionHandler(onFinishedMotionHandler);
@@ -667,5 +669,5 @@ void LWallpaperModel::StartOrderMotion(const Csm::csmChar* group, Csm::csmInt32 
 
 void LWallpaperModel::SetGravitationalAccelerationX(Csm::csmFloat32 gravity)
 {
-
+    // 第五問 1.3
 }
