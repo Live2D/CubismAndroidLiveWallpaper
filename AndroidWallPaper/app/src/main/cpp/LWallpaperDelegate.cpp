@@ -88,6 +88,7 @@ void LWallpaperDelegate::Run()
     // 時間更新
     LWallpaperPal::UpdateTime();
 
+    // 第一問 2.1
     // 画面の初期化
     glClearColor(_r, _g, _b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -284,6 +285,7 @@ void LWallpaperDelegate::SetClearColor(float r, float g, float b)
 
 void LWallpaperDelegate::SetBackGroundSpriteAlpha(float a)
 {
+    // 第四問 1.1
     if (_view)
     {
         _view->SetBackGroundSpriteColor(1.0f,1.0f,1.0f,a);
@@ -292,6 +294,7 @@ void LWallpaperDelegate::SetBackGroundSpriteAlpha(float a)
 
 void LWallpaperDelegate::SetGravitationalAccelerationX(float gravity)
 {
+    // 第四問 1.2
     if (CubismMath::AbsF(gravity) < 0.001f)
     {
         return;

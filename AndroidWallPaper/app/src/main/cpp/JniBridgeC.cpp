@@ -90,18 +90,21 @@ extern "C"
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnSurfaceCreated(JNIEnv *env, jclass type)
     {
+        // 第一問 1.1
         LWallpaperDelegate::GetInstance()->OnSurfaceCreate();
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnSurfaceChanged(JNIEnv *env, jclass type, jint width, jint height)
     {
+        // 第一問 1.2
         LWallpaperDelegate::GetInstance()->OnSurfaceChanged(width, height);
     }
 
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeOnDrawFrame(JNIEnv *env, jclass type)
     {
+        // 第一問 1.3
         LWallpaperDelegate::GetInstance()->Run();
     }
 
@@ -126,6 +129,7 @@ extern "C"
     JNIEXPORT void JNICALL
     Java_com_live2d_demo_JniBridgeJava_nativeStartRandomMotion(JNIEnv *env, jclass type)
     {
+        // 第二問 2.1
         LWallpaperDelegate::GetInstance()->StartRandomMotion();
     }
 
