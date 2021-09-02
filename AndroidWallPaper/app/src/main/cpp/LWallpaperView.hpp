@@ -149,6 +149,13 @@ public:
      */
     void SetRenderTargetClearColor(float r, float g, float b);
 
+    /**
+     * @brief 背景画像の色情報
+     * @param[in]   r   赤(0.0~1.0)
+     * @param[in]   g   緑(0.0~1.0)
+     * @param[in]   b   青(0.0~1.0)
+     * @param[in]   a   不透明度(0.0~1.0)
+     */
     void SetBackGroundSpriteColor(float r, float g, float b, float a);
 
 private:
