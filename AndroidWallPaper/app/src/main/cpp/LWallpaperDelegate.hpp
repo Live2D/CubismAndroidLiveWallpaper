@@ -133,6 +133,10 @@ public:
      */
     void SetBackGroundSpriteAlpha(float a);
 
+    /**
+     * @brief 重力加速度の値の設定
+     * @param[in]   gravity   重力加速度(-9.81~9.81)
+     */
     void SetGravitationalAccelerationX(float gravity);
 
     /**
