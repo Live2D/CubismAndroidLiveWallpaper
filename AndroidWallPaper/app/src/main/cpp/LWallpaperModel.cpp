@@ -421,13 +421,16 @@ void LWallpaperModel::Update()
         // これまでの移動量を取得
         csmFloat32 tx = _modelMatrix->GetTranslateX();
 
+        // 一定値を下回っている場合
         if (CubismMath::AbsF(_gravitationalAccelerationX) < conditionStandardValue * calculationReferenceNumber)
         {
+            // 画面中央へ
             csmFloat32 accel = -tx * LWallpaperPal::GetDeltaTime() * calculationReferenceNumber;
             tx += accel;
         }
         else
         {
+            // 端末が傾いている方向へ向かうように
             tx += -_gravitationalAccelerationX * LWallpaperPal::GetDeltaTime();
         }
 
