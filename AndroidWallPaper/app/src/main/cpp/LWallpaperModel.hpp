@@ -64,7 +64,7 @@ public:
     void Update();
 
     /**
-     * @brief   ランダムなモーションを再生する（Java呼び出し用）
+     * @brief   ランダムなモーションを再生する（JNI呼び出し用）
      *
      */
     void StartRandomMotion();
@@ -79,7 +79,7 @@ public:
     void StartRandomMotionWithOption(const Csm::csmChar* group, Csm::csmInt32 priority, Csm::ACubismMotion::FinishedMotionCallback onFinishedMotionHandler = NULL);
 
     /**
-     * @brief   指定したモーションを再生する（Java呼び出し用）
+     * @brief   指定したモーションを再生する（JNIび出し用）
      *
      */
     void StartOrderMotion(const Csm::csmChar* group,Csm::csmInt32 index,Csm::csmInt32 priority);
